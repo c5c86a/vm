@@ -1,0 +1,15 @@
+sudo: required
+language: go
+go:
+  - '1.7'
+services:
+  - docker
+
+before_install:
+  - echo curl -sS https://get.k8s.io | bash
+  - curl -LO https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl
+  - chmod +x kubectl
+  - mv kubectl /usr/local/bin/kubectl
+
+script:
+  - echo "done"
