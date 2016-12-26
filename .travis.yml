@@ -6,6 +6,7 @@ services:
 
 before_install:
   - pip install pykube
+  - python lib/create_vultr_vm.py
 
 script:
   - echo "done"
