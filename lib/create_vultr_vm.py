@@ -109,12 +109,12 @@ class SSH2VM:
         self.ip = ip
         env.hosts = [ip]
         env.user = 'root'
-        env.key_filename = 'id_rsa'
+        env.key_filename = 'key'
     def is_reachable(self):
         result = false
         command = 'date'
         array = ["ssh",
-               "-i", "id_rsa",
+               "-i", "key",
                "-o", "StrictHostKeyChecking=no",
                "-o", "KbdInteractiveDevices=no",
                "-o", "BatchMode=yes",
