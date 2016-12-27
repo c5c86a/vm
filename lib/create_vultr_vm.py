@@ -107,6 +107,9 @@ class Server:
 class SSH2VM:
     def __init__(ip):
         self.ip = ip
+        env.hosts = [ip]
+        env.user = 'root'
+        env.key_filename = 'id_rsa'
     def is_reachable(self):
         result = false
         command = 'date'
@@ -130,8 +133,7 @@ class SSH2VM:
                     break
         return result
     def copy(local_path):
-        env.hosts = [ip]
-        put(local_path, '')
+       put(local_path, '')
 
 
 def main():
