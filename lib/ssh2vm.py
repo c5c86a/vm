@@ -12,7 +12,7 @@ class SSH2VM:
         env.user = 'root'
         env.key_filename = 'key'
     def is_reachable(self):
-        result = false
+        result = False
         command = 'date'
         array = ["ssh",
                "-i", "key",
@@ -30,7 +30,7 @@ class SSH2VM:
                 pid = Popen(array, stdout=PIPE, stderr=PIPE)
                 out, err = pid.communicate()                         # executes command
                 if pid.returncode==0:
-                    result = true
+                    result = True
                     break
         return result
     def copy(local_path):
