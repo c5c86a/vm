@@ -22,7 +22,7 @@ class SSH2VM:
                "%s@%s" % ('root', self.ip)]
         array.append(command.split(' '))
 
-        first_atttempt = Delorean()
+        first_attempt = Delorean()
         while True:
             if Delorean() - first_attempt < timedelta(minutes=5):
 	        sleep(10)
