@@ -1,5 +1,6 @@
 from delorean import Delorean
 from datetime import timedelta
+from time import sleep
 
 from subprocess import Popen
 
