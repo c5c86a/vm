@@ -57,6 +57,7 @@ class Server:
         :param label:
         :return: ip
         """
+        ip = None
         v = Vultr('token')
         data = {
             'DCID':9,             # data center at Frankfurt
@@ -72,17 +73,20 @@ class Server:
         response = v.vultr_post('/server/create', data)
         startuptime = Delorean()
         self.id = response['SUBID']
-        for i in range((30)):
-            srv = v.vultr_get('/server/list', {'SUBID': self.id})
-            if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
-                eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
+        while True:
+            if Delorean() - startuptime < timedelta(minutes=10):
+                srv = v.vultr_get('/server/list', {'SUBID': self.id})
+                if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
+                    eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
+                    sleep(10)
+                    ip = srv['main_ip']
+                    self.IPs[ip] = startuptime
+                    break
+                eprint("Waiting for vultr to create server")
                 sleep(10)
-                ip = srv['main_ip']
-                self.IPs[ip] = startuptime
-                return ip
-            eprint("Waiting for vultr to create server")
-            sleep(10)
-        assert False, 'Failed to get status of new server within 5 minutes'
+            else:
+                assert False, 'Failed to get status of new server within 5 minutes'
+        return ip
 
     def destroy(self, ip):
         while True:
@@ -99,7 +103,7 @@ def main():
     s = Server()
     IPs = []
     for label in range(2):
-        IPs.append(s.create(str(label)))
+        IPs.append(s.create('travis' + str(label)))
     for ip in IPs:
         s.destroy(ip)
 
