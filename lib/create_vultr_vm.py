@@ -10,6 +10,7 @@ from os import environ
 from datetime import timedelta
 from delorean import Delorean
 
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -103,7 +104,7 @@ def main():
     s = Server()
     IPs = []
     for label in range(2):
-        IPs.append(s.create('travis' + str(label)))
+        IPs.append(s.create('tost' + str(label)))
     for ip in IPs:
         s.destroy(ip)
 
