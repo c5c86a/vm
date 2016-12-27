@@ -9,7 +9,7 @@ from os import environ
 
 from datetime import timedelta
 from delorean import Delorean
-
+###################################
 from subprocess import Popen
 
 from fabric.api import env
@@ -20,7 +20,7 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-class Vultr():
+class VultrAPI():
     def __init__(self, filename):
         """
 
@@ -64,7 +64,7 @@ class Server:
         :param label:
         :return: ip
         """
-        v = Vultr('token')
+        v = VultrAPI('token')
         data = {
             'DCID':9,             # data center at Frankfurt
             'VPSPLANID':29,       # 768 MB RAM,15 GB SSD,1.00 TB BW
@@ -98,14 +98,14 @@ class Server:
             if Delorean() - self.startuptime < timedelta(minutes=5):
 	        sleep(10)
             else:
-                v = Vultr('token')
+                v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.id})
                 assert response.status_code == 200, "Failed to destroy server with id %d" % self.id
                 break
 
 
 class SSH2VM:
-    def __init__(ip):
+    def __init__(self, ip):
         self.ip = ip
         env.hosts = [ip]
         env.user = 'root'
