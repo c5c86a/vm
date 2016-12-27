@@ -8,7 +8,8 @@ def main():
     vm = SSH2VM(ip)
     if vm.is_reachable():
         print('is reachable')
-        vm.copy('deploy/smsc.sh')
+        vm.upload('deploy/smsc.sh')
+        vm.execute('bash +x smsc.sh')
     else:
         print('is not reachable')
     s.destroy_node()

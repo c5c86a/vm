@@ -33,7 +33,10 @@ class SSH2VM:
                     result = True
                     break
         return result
-    def copy(local_path):
+   def upload(local_path):
        put(local_path, '')
+
+   def execute(local_path):
+       run(local_path, '')
 
 
