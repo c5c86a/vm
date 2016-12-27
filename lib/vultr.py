@@ -74,18 +74,22 @@ class Server:
         response = v.vultr_post('/server/create', data)
         self.startuptime = Delorean()
         self.id = response['SUBID']
-        while True:
-            if Delorean() - self.startuptime < timedelta(minutes=10):
-                srv = v.vultr_get('/server/list', {'SUBID': self.id})
-                if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
-                    eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
+        try:
+            while True:
+                if Delorean() - self.startuptime < timedelta(minutes=10):
+                    srv = v.vultr_get('/server/list', {'SUBID': self.id})
+                    if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
+                        eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
+                        sleep(10)
+                        self.ip = srv['main_ip']
+                        break
+                    eprint("Waiting for vultr to create server")
                     sleep(10)
-                    self.ip = srv['main_ip']
-                    break
-                eprint("Waiting for vultr to create server")
-                sleep(10)
-            else:
-                assert False, 'Failed to get status of new server within 5 minutes'
+                else:
+                    assert False, 'Failed to get status of new server within 5 minutes'
+        except:
+            self.destroy()
+            raise
         return self.ip
 
     def destroy(self):
