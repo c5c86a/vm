@@ -10,6 +10,7 @@ from os import environ
 from datetime import timedelta
 from delorean import Delorean
 
+from subprocess import Popen, communicate
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -99,18 +100,39 @@ class Server:
                 break
 
 
-class Provisioner:
-    s = Server()
-    def create_node(self, label):
-        s.create(label)
-        return self
-    def destroy_node(self):
-        s.destroy()
-        return self
+class SSH2VM:
+    def is_reachable(self, ip):
+        result = false
+        command = 'date'
+        array = ["ssh",
+               "-i", "id_rsa",
+               "-o", "StrictHostKeyChecking=no",
+               "-o", "KbdInteractiveDevices=no",
+               "-o", "BatchMode=yes",
+               "%s@%s" % ('root', ip)]
+        array.append(command.split(' '))
+
+        first_atttempt = Delorean()
+        while True:
+            if Delorean() - first_attempt < timedelta(minutes=5):
+	        sleep(10)
+            else:
+                pid = Popen(array, stdout=PIPE, stderr=PIPE)
+                out, err = pid.communicate()                         # executes command
+                if pid.returncode==0:
+                    result = true
+                    break
+        return result
 
 
 def main():
-    Provisioner().create_node('travis').destroy_node()
+    s = Server()
+    ip = s.create('travis')
+    if SSH2VM().is_reachable(ip):
+        print('is reachable')
+    else:
+        print('is not reachable')
+    s.destroy_node()
 
 
 if __name__ == "__main__":
