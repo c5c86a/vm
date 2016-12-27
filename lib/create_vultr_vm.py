@@ -12,6 +12,10 @@ from delorean import Delorean
 
 from subprocess import Popen
 
+from fabric.api import env
+from fabric.operations import run, put
+
+
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
@@ -52,7 +56,7 @@ class Vultr():
 
 class Server:
     ip = None
-    startuptime
+    startuptime = None
 
     def create(self, label):
         """
@@ -101,7 +105,9 @@ class Server:
 
 
 class SSH2VM:
-    def is_reachable(self, ip):
+    def __init__(ip):
+        self.ip = ip
+    def is_reachable(self):
         result = false
         command = 'date'
         array = ["ssh",
@@ -109,7 +115,7 @@ class SSH2VM:
                "-o", "StrictHostKeyChecking=no",
                "-o", "KbdInteractiveDevices=no",
                "-o", "BatchMode=yes",
-               "%s@%s" % ('root', ip)]
+               "%s@%s" % ('root', self.ip)]
         array.append(command.split(' '))
 
         first_atttempt = Delorean()
@@ -123,13 +129,18 @@ class SSH2VM:
                     result = true
                     break
         return result
+    def copy(local_path):
+        env.hosts = [ip]
+        put(local_path, '')
 
 
 def main():
     s = Server()
     ip = s.create('travis')
-    if SSH2VM().is_reachable(ip):
+    vm = SSH2VM(ip)
+    if vm.is_reachable():
         print('is reachable')
+        vm.copy('deploy/smsc.sh')
     else:
         print('is not reachable')
     s.destroy_node()
