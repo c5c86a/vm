@@ -91,7 +91,7 @@ class Server:
                 sleep(10)
             else:
                 assert False, 'Failed to get status of new server within 5 minutes'
-        return ip
+        return self.ip
 
     def destroy(self):
         while True:
