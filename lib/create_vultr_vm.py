@@ -10,7 +10,7 @@ from os import environ
 from datetime import timedelta
 from delorean import Delorean
 
-from subprocess import Popen, communicate
+from subprocess import Popen
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
