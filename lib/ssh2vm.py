@@ -33,10 +33,13 @@ class SSH2VM:
                     result = True
                     break
         return result
-   def upload(local_path):
-       put(local_path, '')
+    def upload(local_path):
+        put(local_path, '')
 
-   def execute(local_path):
-       run(local_path, '')
+    def execute(local_path):
+        """
+        The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
+        """
+        run(local_path, '')
 
 
