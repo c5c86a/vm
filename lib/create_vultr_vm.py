@@ -80,7 +80,7 @@ class Server:
         self.startuptime = Delorean()
         self.id = response['SUBID']
         while True:
-            if Delorean() - startuptime < timedelta(minutes=10):
+            if Delorean() - self.startuptime < timedelta(minutes=10):
                 srv = v.vultr_get('/server/list', {'SUBID': self.id})
                 if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                     eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
