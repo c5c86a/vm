@@ -14,7 +14,7 @@ def main():
         else:
             print('is not reachable')
     finally:
-        s.destroy_node()
+        s.destroy()
 
 
 if __name__ == "__main__":
