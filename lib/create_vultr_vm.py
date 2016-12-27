@@ -50,7 +50,8 @@ class Vultr():
 
 
 class Server:
-    IPs = {} # key IP, value datetime created in delorean format
+    ip = None
+    startuptime
 
     def create(self, label):
         """
@@ -58,7 +59,6 @@ class Server:
         :param label:
         :return: ip
         """
-        ip = None
         v = Vultr('token')
         data = {
             'DCID':9,             # data center at Frankfurt
@@ -72,7 +72,7 @@ class Server:
         if label.startswith('test'):
             data['notify_activate'] = 'no'
         response = v.vultr_post('/server/create', data)
-        startuptime = Delorean()
+        self.startuptime = Delorean()
         self.id = response['SUBID']
         while True:
             if Delorean() - startuptime < timedelta(minutes=10):
@@ -80,8 +80,7 @@ class Server:
                 if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                     eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
                     sleep(10)
-                    ip = srv['main_ip']
-                    self.IPs[ip] = startuptime
+                    self.ip = srv['main_ip']
                     break
                 eprint("Waiting for vultr to create server")
                 sleep(10)
@@ -89,9 +88,9 @@ class Server:
                 assert False, 'Failed to get status of new server within 5 minutes'
         return ip
 
-    def destroy(self, ip):
+    def destroy(self):
         while True:
-            if Delorean() - startuptime < timedelta(minutes=5):
+            if Delorean() - self.startuptime < timedelta(minutes=5):
 	        sleep(10)
             else:
                 v = Vultr('token')
@@ -100,13 +99,18 @@ class Server:
                 break
 
 
-def main():
+class Provisioner:
     s = Server()
-    IPs = []
-    for label in range(2):
-        IPs.append(s.create('tost' + str(label)))
-    for ip in IPs:
-        s.destroy(ip)
+    def create_node(self, label):
+        s.create(label)
+        return self
+    def destroy_node(self):
+        s.destroy()
+        return self
+
+
+def main():
+    Provisioner().create_node('travis').destroy_node()
 
 
 if __name__ == "__main__":
