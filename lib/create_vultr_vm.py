@@ -1,13 +1,14 @@
 from __future__ import print_function
 import sys
 
-
 from time import sleep
 from sys import argv
 from requests import post, get
 from requests.auth import HTTPBasicAuth
 from os import environ
 
+from datetime import timedelta
+from delorean import Delorean
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -48,6 +49,7 @@ class Vultr():
 
 
 class Server:
+    IPs = {} # key IP, value datetime created in delorean format
 
     def create(self, label):
         """
@@ -68,30 +70,38 @@ class Server:
         if label.startswith('test'):
             data['notify_activate'] = 'no'
         response = v.vultr_post('/server/create', data)
+        startuptime = Delorean()
         self.id = response['SUBID']
         for i in range((30)):
             srv = v.vultr_get('/server/list', {'SUBID': self.id})
             if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                 eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
                 sleep(10)
-                return srv['main_ip']
+                ip = srv['main_ip']
+                self.IPs[ip] = startuptime
+                return ip
             eprint("Waiting for vultr to create server")
             sleep(10)
         assert False, 'Failed to get status of new server within 5 minutes'
 
-    def destroy(self):
-        v = Vultr('token')
-        response = v.vultr_post('/server/destroy', {'SUBID': self.id})
-        assert response.status_code == 200, "Failed to destroy server with id %d" % self.id
+    def destroy(self, ip):
+        while True:
+            if Delorean() - startuptime < timedelta(minutes=5):
+	        sleep(10)
+            else:
+                v = Vultr('token')
+                response = v.vultr_post('/server/destroy', {'SUBID': self.id})
+                assert response.status_code == 200, "Failed to destroy server with id %d" % self.id
+                break
 
 
 def main():
-    """
-    Sets environment variable IP with the IP of the new server that has the given label
-    """
-    label = 'travis'
-    ip = Server().create(label)
-    print(ip)
+    s = Server()
+    IPs = []
+    for label in range(2):
+        IPs.append(s.create(str(label)))
+    for ip in IPs:
+        s.destroy(ip)
 
 
 if __name__ == "__main__":
