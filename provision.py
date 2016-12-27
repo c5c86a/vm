@@ -1,5 +1,5 @@
-from vultr import Server
-from ssh2vm import SSH2VM
+from lib.vultr import Server
+from lib.ssh2vm import SSH2VM
 
 
 def main():
