@@ -1,6 +1,7 @@
 from lib.vultr import Server
 from lib.ssh2vm import SSH2VM
 
+from requests import post, get
 
 def main():
     s = Server()
@@ -11,6 +12,7 @@ def main():
         print('is reachable')
         vm.upload('deploy/smsc.sh')
         vm.execute('bash +x smsc.sh')
+        print get("http://%s:8080" % ip).text
     finally:
         s.destroy()
 
