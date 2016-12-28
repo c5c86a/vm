@@ -7,12 +7,10 @@ def main():
     ip = s.create('travis')
     try:
         vm = SSH2VM(ip)
-        if vm.is_reachable():
-            print('is reachable')
-            vm.upload('deploy/smsc.sh')
-            vm.execute('bash +x smsc.sh')
-        else:
-            print('is not reachable')
+        assert vm.is_reachable(), "VM is not reachable with ssh"
+        print('is reachable')
+        vm.upload('deploy/smsc.sh')
+        vm.execute('bash +x smsc.sh')
     finally:
         s.destroy()
 

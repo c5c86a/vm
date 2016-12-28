@@ -7,6 +7,7 @@ from subprocess import Popen, PIPE
 from fabric.api import env
 from fabric.operations import run, put
 
+
 class SSH2VM:
     def __init__(self, ip):
         self.ip = ip
