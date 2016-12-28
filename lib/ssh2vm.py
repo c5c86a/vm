@@ -16,14 +16,13 @@ class SSH2VM:
         env.key_filename = 'key'
     def is_reachable(self):
         result = False
-        command = 'date'
         array = ["ssh",
                "-i", "key",
                "-o", "StrictHostKeyChecking=no",
                "-o", "KbdInteractiveDevices=no",
                "-o", "BatchMode=yes",
-               "%s@%s" % ('root', self.ip)]
-        array.append(command.split(' '))
+               "%s@%s" % ('root', self.ip),
+               "date"]
 
         first_attempt = Delorean()
         while True:
