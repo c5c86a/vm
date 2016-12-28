@@ -4,16 +4,24 @@ from time import sleep
 
 from subprocess import Popen, PIPE
 
-from fabric.api import env
 from fabric.operations import run, put
+from fabric.context_managers import settings
 
 
 class SSH2VM:
     def __init__(self, ip):
         self.ip = ip
-        env.hosts = [ip]
-        env.user = 'root'
-        env.key_filename = 'key'
+    def cmd(command):
+        array = ["ssh",
+               "-i", "key",
+               "-o", "StrictHostKeyChecking=no",
+               "-o", "KbdInteractiveDevices=no",
+               "-o", "BatchMode=yes",
+               "%s@%s" % ('root', self.ip),
+               "date"]
+        pid = Popen(array, stdout=PIPE, stderr=PIPE)
+        return pid.communicate()
+ 
     def is_reachable(self):
         result = False
         array = ["ssh",
@@ -36,12 +44,14 @@ class SSH2VM:
                     break
         return result
     def upload(self, local_path):
-        put(local_path, '')
+        with settings(host_string='root@'+self.ip, key_filename='key'):
+            put(local_path, '')
 
     def execute(self, command):
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
-        run(command)
+        with settings(host_string='root@'+self.ip, key_filename='key'):
+            run(command)
 
 
