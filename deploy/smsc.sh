@@ -1,4 +1,4 @@
 #!/bin.sh
 
-apt-get install python
+apt-get install -y python
 python -m SimpleHTTPServer 8080
