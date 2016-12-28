@@ -91,6 +91,8 @@ class Server:
         except:
             self.destroy()
             raise
+        if self.ip==None:
+            raise
         return self.ip
 
     def destroy(self):
