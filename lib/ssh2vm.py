@@ -54,4 +54,11 @@ class SSH2VM:
         with settings(host_string='root@'+self.ip, key_filename='key'):
             run(command)
 
+    def daemon(self, command):
+        """
+        The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
+        """
+        with settings(host_string='root@'+self.ip, key_filename='key'):
+            run("sh -c '((nohup %s > /dev/null 2> /dev/null) & )'" % command, pty=False)
+
 
