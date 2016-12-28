@@ -38,10 +38,10 @@ class SSH2VM:
     def upload(self, local_path):
         put(local_path, '')
 
-    def execute(self, local_path):
+    def execute(self, command):
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
-        run(local_path, '')
+        run(command)
 
 
