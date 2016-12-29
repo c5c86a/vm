@@ -53,6 +53,7 @@ class VultrAPI():
 
 
 class Server:
+    subid = None
     ip = None
     startuptime = None
 
@@ -74,7 +75,7 @@ class Server:
             data['notify_activate'] = 'no'
         response = v.vultr_post('/server/create', data)
         self.startuptime = Delorean()
-        self.id = response['SUBID']
+        self.subid = response['SUBID']
         try:
             while True:
                 if Delorean() - self.startuptime < timedelta(minutes=10):
@@ -101,8 +102,8 @@ class Server:
 	        sleep(10)
             else:
                 v = VultrAPI('token')
-                response = v.vultr_post('/server/destroy', {'SUBID': self.id})
-                assert response.status_code == 200, "Failed to destroy server with id %d" % self.id
+                response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
+                assert response.status_code == 200, "Failed to destroy server with id %s" % self.subid
                 break
 
 
