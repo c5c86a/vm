@@ -88,7 +88,7 @@ class Server:
         :return: ip
         """
         v = VultrAPI('token')
-        scriptid = script.create("deploy/%s.sh" % label)
+        scriptid = self.script.create("deploy/%s.sh" % label)
         data = {
             'DCID':      9,             # data center at Frankfurt
             'VPSPLANID': 29,       # 768 MB RAM,15 GB SSD,1.00 TB BW
@@ -130,7 +130,7 @@ class Server:
                 v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
                 #assert response.status_code == 200, "Failed to destroy server with subid %s" % self.subid
-                script.destroy()
+                self.script.destroy()
                 break
 
 
