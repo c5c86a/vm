@@ -59,6 +59,6 @@ class SSH2VM:
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
         with settings(host_string='root@'+self.ip, key_filename='key'):
-            run("nohup %s > /dev/null 2> /dev/null &'" % command, pty=False)
+            run("nohup %s >& /dev/null < /dev/null &" % command, pty=False) # http://docs.fabfile.org/en/1.5/faq.html
 
 
