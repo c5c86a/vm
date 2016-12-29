@@ -79,7 +79,7 @@ class Server:
         try:
             while True:
                 if Delorean() - self.startuptime < timedelta(minutes=10):
-                    srv = v.vultr_get('/server/list', {'SUBID': self.id})
+                    srv = v.vultr_get('/server/list', {'SUBID': self.subid})
                     if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                         eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
                         sleep(10)
@@ -103,7 +103,7 @@ class Server:
             else:
                 v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
-                assert response.status_code == 200, "Failed to destroy server with id %s" % self.subid
+                assert response.status_code == 200, "Failed to destroy server with subid %s" % self.subid
                 break
 
 
