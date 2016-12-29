@@ -8,7 +8,7 @@ class Provisioner:
     srv = None
     vm = None
     label = None
-    def _init__(self, label):
+    def __init__(self, label):
         self.label = label
         self.srv = Server()
         ip = self.srv.create(label)
