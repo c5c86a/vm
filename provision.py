@@ -22,6 +22,7 @@ class Provisioner:
     def destroy(self):
         try:
             sleep(60)
+            self.vm.execute("cat /log.txt")
             print get("http://%s:8080" % self.ip).text
         finally:
             self.srv.destroy()

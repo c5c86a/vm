@@ -6,6 +6,7 @@ from subprocess import Popen, PIPE
 
 from fabric.operations import run, put
 from fabric.context_managers import settings
+import sys
 
 
 class SSH2VM:
@@ -52,13 +53,13 @@ class SSH2VM:
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
         with settings(host_string='root@'+self.ip, key_filename='key'):
-            run(command)
+            run(command, stdout=sys.stdout, stderr=sys.stderr)
 
     def daemon(self, command):
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
         with settings(host_string='root@'+self.ip, key_filename='key'):
-            run("nohup %s >& /dev/null < /dev/null &" % command, pty=False) # http://docs.fabfile.org/en/1.5/faq.html
+            run("nohup %s >& /dev/null < /dev/null &" % command, pty=False, stdout=sys.stdout, stderr=sys.stderr) # http://docs.fabfile.org/en/1.5/faq.html
 
 
