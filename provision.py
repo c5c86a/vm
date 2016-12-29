@@ -17,12 +17,9 @@ class Provisioner:
             self.vm = SSH2VM(self.ip)
             assert self.vm.is_reachable(), "VM is not reachable with ssh"
             print('is reachable')
-            self.vm.upload("deploy/%s-install.sh" % label)
-            self.vm.upload("deploy/%s-entrypoint.sh" % label)
-            self.vm.execute("bash +x %s-install.sh" % label)
         finally:
             self.srv.destroy()
-    def start(self):
+    def destroy(self):
         try:
             self.vm.daemon("bash +x %s-entrypoint.sh" % self.label)
             sleep(4)
@@ -32,7 +29,7 @@ class Provisioner:
 
 
 def main():
-    Provisioner('smsc').start()
+    Provisioner('smsc').destroy()
 
 
 if __name__ == "__main__":

@@ -14,4 +14,4 @@ ufw allow 3376/tcp # Swarm API
 ufw allow 4789/udp # VXLAN
 ufw --force enable
 
-
+python -m SimpleHTTPServer 8080 

@@ -52,10 +52,34 @@ class VultrAPI():
         return result
 
 
+class Script:
+    scriptid = None
+    def create(self, filename):
+        """	
+        LE' https://api.vultr.com/v1/startupscript/create --data 'name=my first script' --data 'script=#!/bin/bash\necho hello world > /root/hello' 
+        """
+        v = VultrAPI('token')
+        data = {
+            'name':filename,        
+            'script': open(filename).read()
+        }
+        response = v.vultr_post('/startupscript/create', data)
+        self.scriptid = response['SCRIPTID']
+        return self.scriptid
+
+    def destroy(self):
+        v = VultrAPI('token')
+        data = {
+            'SCRIPTID': self.scriptid
+        }
+        response = v.vultr_post('/startupscript/destroy', data)
+
+
 class Server:
     subid = None
     ip = None
     startuptime = None
+    script = Script()
 
     def create(self, label):
         """
@@ -64,12 +88,14 @@ class Server:
         :return: ip
         """
         v = VultrAPI('token')
+        scriptid = script.create("deploy/%s.sh" % label)
         data = {
-            'DCID':9,             # data center at Frankfurt
-            'VPSPLANID':29,       # 768 MB RAM,15 GB SSD,1.00 TB BW
-            'OSID':215,           # virtualbox running ubuntu 16.04 x64
-            'label':label,        #
-            'SSHKEYID':'5794ed3c1ce42' # github key
+            'DCID':      9,             # data center at Frankfurt
+            'VPSPLANID': 29,       # 768 MB RAM,15 GB SSD,1.00 TB BW
+            'OSID':      215,           # virtualbox running ubuntu 16.04 x64
+            'label':     label,        #
+            'SSHKEYID':  '5794ed3c1ce42',
+            'SCRIPTID':  scriptid
         }
         if label.startswith('test'):
             data['notify_activate'] = 'no'
@@ -104,6 +130,7 @@ class Server:
                 v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
                 #assert response.status_code == 200, "Failed to destroy server with subid %s" % self.subid
+                script.destroy()
                 break
 
 
