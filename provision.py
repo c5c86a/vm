@@ -8,12 +8,13 @@ class Provisioner:
     srv = None
     vm = None
     label = None
+    ip = None
     def __init__(self, label):
         self.label = label
         self.srv = Server()
-        ip = self.srv.create(label)
+        self.ip = self.srv.create(label)
         try:
-            self.vm = SSH2VM(ip)
+            self.vm = SSH2VM(self.ip)
             assert self.vm.is_reachable(), "VM is not reachable with ssh"
             print('is reachable')
             self.vm.upload("deploy/%s-install.sh" % label)
@@ -25,7 +26,7 @@ class Provisioner:
         try:
             self.vm.daemon("bash +x %s-entrypoint.sh" % self.label)
             sleep(4)
-            print get("http://%s:8080" % ip).text
+            print get("http://%s:8080" % self.ip).text
         finally:
             self.srv.destroy()
 
