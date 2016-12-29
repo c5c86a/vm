@@ -21,8 +21,7 @@ class Provisioner:
             self.srv.destroy()
     def destroy(self):
         try:
-            self.vm.daemon("bash +x %s-entrypoint.sh" % self.label)
-            sleep(4)
+            sleep(60)
             print get("http://%s:8080" % self.ip).text
         finally:
             self.srv.destroy()
