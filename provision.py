@@ -21,7 +21,7 @@ class Provisioner:
             self.vm.execute("bash +x %s-install.sh" % label)
         finally:
             self.srv.destroy()
-    def start():
+    def start(self):
         try:
             self.vm.daemon("bash +x %s-entrypoint.sh" % self.label)
             sleep(4)
