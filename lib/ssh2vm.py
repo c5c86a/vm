@@ -52,14 +52,14 @@ class SSH2VM:
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
-        with settings(host_string='root@'+self.ip, key_filename='key'):
+        with settings(host_string='root@'+self.ip, key_filename='key', skip_bad_hosts=True):
             run(command, stdout=sys.stdout, stderr=sys.stderr)
 
     def daemon(self, command):
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
-        with settings(host_string='root@'+self.ip, key_filename='key'):
+        with settings(host_string='root@'+self.ip, key_filename='key', skip_bad_hosts=True):
             run("nohup %s >& /dev/null < /dev/null &" % command, pty=False, stdout=sys.stdout, stderr=sys.stderr) # http://docs.fabfile.org/en/1.5/faq.html
 
 
