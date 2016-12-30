@@ -6,7 +6,7 @@ from subprocess import Popen, PIPE
 
 from fabric.operations import run, put
 from fabric.context_managers import settings
-import fabric.state import env
+from fabric.state import env
 
 import sys
 
