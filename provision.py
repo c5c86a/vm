@@ -28,9 +28,9 @@ def main():
         vm = Provisioner('smsc')
         print('sleeping for 60 sec')
         sleep(60)
-        self.vm.execute("cat /log.txt")
+        self.vm.execute("cat /tmp/firstboot.log")
     finally:
-        vm.destory()
+        vm.destroy()
 
 
 if __name__ == "__main__":
