@@ -29,7 +29,7 @@ class Provisioner:
 
 
 def main():
-    Provisioner('smsc').destroy()
+    Provisioner('smsc') #.destroy()
 
 
 if __name__ == "__main__":
