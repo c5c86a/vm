@@ -98,6 +98,7 @@ class Server:
         self.subid = response['SUBID']
 
     def getip(self):
+        v = VultrAPI('token')
         while True:
             if Delorean() - self.startuptime < timedelta(minutes=10):
                 srv = v.vultr_get('/server/list', {'SUBID': self.subid})
