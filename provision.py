@@ -23,14 +23,14 @@ class Provisioner:
 
 
 def main():
-    vm = None
+    p = None
     try:
-        vm = Provisioner('smsc')
+        p = Provisioner('smsc')
         print('sleeping for 60 sec')
         sleep(60)
-        self.vm.execute("cat /tmp/firstboot.log")
+        p.vm.execute("cat /tmp/firstboot.log")
     finally:
-        vm.destroy()
+        p.destroy()
 
 
 if __name__ == "__main__":
