@@ -9,27 +9,28 @@ class Provisioner:
     vm = None
     label = None
     ip = None
+
     def __init__(self, label):
         self.label = label
         self.srv = Server()
         self.ip = self.srv.create(label)
-        try:
-            self.vm = SSH2VM(self.ip)
-            assert self.vm.is_reachable(), "VM is not reachable with ssh"
-            print('is reachable')
-        finally:
-            self.srv.destroy()
+        self.vm = SSH2VM(self.ip)
+        assert self.vm.is_reachable(), "VM is not reachable with ssh"
+        print('is reachable')
+
     def destroy(self):
-        try:
-            sleep(60)
-            self.vm.execute("cat /log.txt")
-            print get("http://%s:8080" % self.ip).text
-        finally:
-            self.srv.destroy()
+        self.srv.destroy()
 
 
 def main():
-    Provisioner('smsc') #.destroy()
+    vm = None
+    try:
+        vm = Provisioner('smsc')
+        print('sleeping for 60 sec')
+        sleep(60)
+        self.vm.execute("cat /log.txt")
+    finally:
+        vm.destory()
 
 
 if __name__ == "__main__":
