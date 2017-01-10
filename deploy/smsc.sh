@@ -1,6 +1,7 @@
 #!/bin.sh
 
-apt-get install -y python ufw
+apt-get update
+apt-get install -y python
 
 ufw default deny incoming
 ufw default allow outgoing
@@ -15,8 +16,8 @@ ufw allow 4243/tcp
 sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw 
 ufw --force enable
 
-#groupadd docker
-#usermod -aG docker root
+groupadd docker
+usermod -aG docker root
 curl -sSL https://get.docker.com/ | sh
 
 echo "finished smsc.sh" >> /log.txt
