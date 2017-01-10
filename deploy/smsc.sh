@@ -1,5 +1,6 @@
 #!/bin.sh
 
+export DEBIAN_FRONTEND=noninteractive
 apt-get update
 
 ufw default deny incoming
