@@ -24,7 +24,7 @@ class Provisioner:
         assert self.vm.is_reachable(), "VM is not reachable with ssh"
         print('is reachable')
         while True:
-            result = self.vm.execute("grep done /tmp/firstboot.log")
+            result = self.vm.execute("grep done /tmp/firstboot.log"):
             if Delorean() - self.srv.startuptime < timedelta(minutes=1):
                 if result.succeded:
                     break
