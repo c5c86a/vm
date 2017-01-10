@@ -20,7 +20,7 @@ class Provisioner:
         Compared to vultr.Server.getip this method makes sure that the VM can be accessed by ssh
         """
         self.ip = self.srv.getip()
-        print("Waiting...")
+        eprint("Waiting...")
         sleep(60)
         self.vm = SSH2VM(self.ip)
         assert self.vm.is_reachable(), "VM is not reachable with ssh"
