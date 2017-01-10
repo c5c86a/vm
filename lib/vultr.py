@@ -54,8 +54,10 @@ class VultrAPI():
 
 class Script:
     scriptid = None
-
     def create(self, filename):
+        """	
+        LE' https://api.vultr.com/v1/startupscript/create --data 'name=my first script' --data 'script=#!/bin/bash\necho hello world > /root/hello' 
+        """
         v = VultrAPI('token')
         data = {
             'name':filename,        
@@ -64,7 +66,6 @@ class Script:
         response = v.vultr_post('/startupscript/create', data)
         self.scriptid = response['SCRIPTID']
         return self.scriptid
-
 
     def destroy(self):
         v = VultrAPI('token')
@@ -81,6 +82,11 @@ class Server:
     script = Script()
 
     def create(self, label):
+        """
+        Creates a new vm at vultr. Usually it takes 2 minutes.
+        :param label:
+        :return: ip
+        """
         v = VultrAPI('token')
         scriptid = self.script.create("deploy/%s.sh" % label)
         data = {
@@ -96,8 +102,6 @@ class Server:
         response = v.vultr_post('/server/create', data)
         self.startuptime = Delorean()
         self.subid = response['SUBID']
-
-    def getip(self):
         try:
             while True:
                 if Delorean() - self.startuptime < timedelta(minutes=10):

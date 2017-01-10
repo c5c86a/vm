@@ -12,7 +12,6 @@ import sys
 
 env.connection_attempts = 5
 
-
 class SSH2VM:
     def __init__(self, ip):
         self.ip = ip
@@ -56,10 +55,8 @@ class SSH2VM:
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
-        result = None
         with settings(host_string='root@'+self.ip, key_filename='key'):
-            result = run(command, stdout=sys.stdout, stderr=sys.stderr)
-        return result
+            run(command, stdout=sys.stdout, stderr=sys.stderr)
 
     def daemon(self, command):
         """
