@@ -13,6 +13,8 @@ ufw allow 3376/tcp # Swarm API
 ufw allow 4789/udp # VXLAN
 ufw --force enable
 
+groupadd docker
+usermod -aG docker root
 curl -sSL https://get.docker.com/ | sh
 
 echo "finished smsc.sh" >> /log.txt
