@@ -15,7 +15,7 @@ class Provisioner:
         self.srv = Server()
         self.srv.create(label)
 
-    def getip(self):
+    def getip(self, label):
         """
         Compared to vultr.Server.getip this method makes sure that the VM can be accessed by ssh
         """
@@ -33,7 +33,6 @@ class Provisioner:
             else:
                 self.vm.execute("cat /tmp/firstboot.log")
                 assert False, "VM started but script failed"
-        return self.ip
  
 
     def destroy(self):
