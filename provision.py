@@ -25,7 +25,7 @@ class Provisioner:
         print('is reachable')
         while True:
             result = self.vm.execute("grep done /tmp/firstboot.log")
-            if Delorean() - self.srv.startuptime < timedelta(minutes=10):
+            if Delorean() - self.srv.startuptime < timedelta(minutes=1):
                 if result.succeded:
                     break
                 eprint("Waiting for startup script %s to have the keyword done" % self.label)
