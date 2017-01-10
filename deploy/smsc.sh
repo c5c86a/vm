@@ -1,7 +1,6 @@
 #!/bin.sh
 
 apt-get install -y python ufw
-curl -sSL https://get.docker.com/ | sh
 
 ufw default deny incoming
 ufw default allow outgoing
@@ -14,5 +13,7 @@ ufw allow 3376/tcp # Swarm API
 ufw allow 4789/udp # VXLAN
 ufw --force enable
 
-echo "done" >> /log.txt
+curl -sSL https://get.docker.com/ | sh
+
+echo "finished smsc.sh" >> /log.txt
 python -m SimpleHTTPServer 8080 
