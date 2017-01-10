@@ -2,7 +2,8 @@
 
 # The last 3 ports are for access to docker daemon, Swarm API and VXLAN
 
-yes | aptdcon --hide-terminal --install "package" python ufw && \
+sleep 20
+apt-get install -y python ufw && \
 curl -sSL https://get.docker.com/ | sh && \
 ufw default deny incoming && \
 ufw default allow outgoing && \
