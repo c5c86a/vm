@@ -3,8 +3,9 @@
 set -e
 
 export DEBIAN_FRONTEND=noninteractive
-rm /var/cache/apt/archives/lock
-rm /var/lib/dpkg/lock
+ps aux | grep '[a]pt'
+#rm /var/cache/apt/archives/lock
+#rm /var/lib/dpkg/lock
 sleep 4
 apt-get update
 
