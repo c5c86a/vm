@@ -3,7 +3,10 @@
 set -e
 
 export DEBIAN_FRONTEND=noninteractive
+killall -we apt-get -qq -y update
+echo "start searching for running apt..."
 ps aux | grep '[a]pt'
+echo "stop searching for running apt..."
 #rm /var/cache/apt/archives/lock
 #rm /var/lib/dpkg/lock
 sleep 4
