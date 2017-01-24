@@ -35,6 +35,7 @@ apt-get -y install curl linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get -y install docker-engine
 adduser user
 usermod -aG docker user
+service docker restart
 
 docker run -d hello-world
 docker ps -a
