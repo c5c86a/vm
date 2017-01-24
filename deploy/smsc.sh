@@ -26,7 +26,10 @@ ufw allow 4243/tcp
 sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw 
 ufw --force enable
 
-#curl -sSL https://get.docker.com/ | sh
+# uncomment due to docker/issues/23365#issuecomment-224638271
+sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
+sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
+curl -sSL https://get.docker.com/ | sh
 
 docker run -d hello-world
 docker ps -a
