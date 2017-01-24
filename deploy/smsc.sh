@@ -29,7 +29,15 @@ ufw --force enable
 # uncomment due to docker/issues/23365#issuecomment-224638271
 sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
 sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
-curl -sSL https://get.docker.com/ | sh
+
+apt-get update
+apt-get -y install docker.io
+ln -sf /usr/bin/docker.io /usr/local/bin/docker
+sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
+adduser user
+usermod -aG docker user
+service docker.io restart
+update-rc.d docker.io defaults
 
 docker run -d hello-world
 docker ps -a
