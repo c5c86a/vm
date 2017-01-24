@@ -9,8 +9,8 @@ ps aux | grep '[a]pt'
 echo "stop searching for 'apt-get -qq -y update' initiated by vultr..."
 rm /var/lib/apt/lists/lock
 rm /var/cache/apt/archives/lock
-#rm /var/lib/dpkg/lock
-#dpkg --configure -a
+rm /var/lib/dpkg/lock
+dpkg --configure -a
 apt-get update
 
 ufw default deny incoming
