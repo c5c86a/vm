@@ -31,7 +31,7 @@ sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
 sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
 
 apt-get update
-apt-get install curl linux-image-extra-$(uname -r) linux-image-extra-virtual
+apt-get -y install curl linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get -y install docker.io
 ln -sf /usr/bin/docker.io /usr/local/bin/docker
 sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
