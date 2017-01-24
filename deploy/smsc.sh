@@ -32,13 +32,9 @@ sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
 
 apt-get update
 apt-get -y install curl linux-image-extra-$(uname -r) linux-image-extra-virtual
-apt-get -y install docker.io
-ln -sf /usr/bin/docker.io /usr/local/bin/docker
-sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
+apt-get -y install docker-engine
 adduser user
 usermod -aG docker user
-service docker.io restart
-update-rc.d docker.io defaults
 
 docker run -d hello-world
 docker ps -a
