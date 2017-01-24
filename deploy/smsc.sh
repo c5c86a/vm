@@ -26,11 +26,7 @@ ufw allow 4243/tcp
 sed -i 's/DEFAULT_FORWARD_POLICY="DROP"/DEFAULT_FORWARD_POLICY="ACCEPT"/' /etc/default/ufw 
 ufw --force enable
 
-apt-get -y install docker.io
-ln -sf /usr/bin/docker.io /usr/local/bin/docker
-sed -i '$acomplete -F _docker docker' /etc/bash_completion.d/docker.io
-service docker.io restart
-update-rc.d docker.io defaults
+curl -sSL https://get.docker.com/ | sh
 
 docker run -d hello-world
 docker ps -a
