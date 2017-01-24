@@ -5,6 +5,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 rm /var/cache/apt/archives/lock
 rm /var/lib/dpkg/lock
+sleep 4
 apt-get update
 
 ufw default deny incoming
