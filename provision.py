@@ -14,8 +14,8 @@ class Provisioner:
         self.label = label
         self.srv = Server()
         self.ip = self.srv.create(label)
-        print('sleeping for 60 sec before attempting an ssh connection')
-        sleep(60)
+        #print('sleeping for 60 sec before attempting an ssh connection')
+        #sleep(60)
         self.vm = SSH2VM(self.ip)
         assert self.vm.is_reachable(), "VM is not reachable with ssh"
         print('is reachable')

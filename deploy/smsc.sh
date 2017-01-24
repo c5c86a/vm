@@ -3,13 +3,12 @@
 set -e
 
 export DEBIAN_FRONTEND=noninteractive
-killall -we apt-get -qq -y update
-echo "start searching for running apt..."
+killall -we 'apt-get'
+echo "start searching for 'apt-get -qq -y update' initiated by vultr..."
 ps aux | grep '[a]pt'
-echo "stop searching for running apt..."
+echo "stop searching for 'apt-get -qq -y update' initiated by vultr..."
 #rm /var/cache/apt/archives/lock
 #rm /var/lib/dpkg/lock
-sleep 4
 apt-get update
 
 ufw default deny incoming
