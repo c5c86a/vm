@@ -55,7 +55,7 @@ echo 'Requires=docker.socket' >> /lib/systemd/system/docker.service
 echo '' >> /lib/systemd/system/docker.service
 echo '[Service]' >> /lib/systemd/system/docker.service
 echo 'Type=notify' >> /lib/systemd/system/docker.service
-echo 'ExecStart=/usr/bin/dockerd' >> /lib/systemd/system/docker.service
+echo 'ExecStart=/usr/bin/dockerd -H fd://' >> /lib/systemd/system/docker.service
 echo 'ExecReload=/bin/kill -s HUP $MAINPID' >> /lib/systemd/system/docker.service
 echo 'LimitNOFILE=1048576' >> /lib/systemd/system/docker.service
 echo 'LimitNPROC=infinity' >> /lib/systemd/system/docker.service
