@@ -32,7 +32,7 @@ sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
 
 apt-get update
 apt-get -y install curl linux-image-extra-$(uname -r) linux-image-extra-virtual
-apt-get install apt-transport-https ca-certificates
+apt-get -y install apt-transport-https ca-certificates
 curl -fsSL https://yum.dockerproject.org/gpg | sudo apt-key add -
 add-apt-repository \
        "deb https://apt.dockerproject.org/repo/ \
