@@ -41,33 +41,14 @@ add-apt-repository \
 apt-get update
 
 # a known issue of docker is that it fails to start at vanilla ubuntu 16.04
-apt-get -y install docker-engine || true
-# workaround
-mkdir -p /lib/systemd/system
-echo '[Unit]' >> /lib/systemd/system/docker.service
-echo 'Description=Docker Application Container Engine' >> /lib/systemd/system/docker.service
-echo 'Documentation=https://docs.docker.com' >> /lib/systemd/system/docker.service
-echo 'After=network.target docker.socket firewalld.service' >> /lib/systemd/system/docker.service
-echo 'Requires=docker.socket' >> /lib/systemd/system/docker.service
-echo '' >> /lib/systemd/system/docker.service
-echo '[Service]' >> /lib/systemd/system/docker.service
-echo 'Type=notify' >> /lib/systemd/system/docker.service
-echo 'EnvironmentFile=-/etc/default/docker' >> /lib/systemd/system/docker.service
-echo 'ExecStart=/usr/bin/dockerd $DOCKER_OPTS' >> /lib/systemd/system/docker.service
-echo 'ExecReload=/bin/kill -s HUP $MAINPID' >> /lib/systemd/system/docker.service
-echo 'LimitNOFILE=1048576' >> /lib/systemd/system/docker.service
-echo 'LimitNPROC=infinity' >> /lib/systemd/system/docker.service
-echo 'LimitCORE=infinity' >> /lib/systemd/system/docker.service
-echo 'TasksMax=infinity' >> /lib/systemd/system/docker.service
-echo 'TimeoutStartSec=0' >> /lib/systemd/system/docker.service
-echo 'Delegate=yes' >> /lib/systemd/system/docker.service
-echo 'KillMode=process' >> /lib/systemd/system/docker.service
-echo '' >> /lib/systemd/system/docker.service
-echo '[Install]' >> /lib/systemd/system/docker.service
-echo 'WantedBy=multi-user.target' >> /lib/systemd/system/docker.service
-systemctl daemon-reload
+apt-get -y install docker.io
 
-systemctl status docker.service
+#rm /etc/init.d/docker
+#rm /etc/rc*/*docker
+
+#systemctl daemon-reload
+
+#systemctl status docker.service
 adduser user
 usermod -aG docker user
 service docker restart
