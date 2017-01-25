@@ -39,7 +39,7 @@ add-apt-repository \
        ubuntu-$(lsb_release -cs) \
        main"
 apt-get update
-apt-get -y install docker-engine
+apt-get -y install docker-engine || systemctl status docker.service
 adduser user
 usermod -aG docker user
 service docker restart
