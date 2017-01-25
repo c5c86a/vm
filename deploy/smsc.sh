@@ -30,6 +30,11 @@ ufw --force enable
 sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
 sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
 
+# ubuntu 16.04
+mkdir -p /etc/systemd/docker.d
+echo '[Service]' >> /etc/systemd/docker.d/customexec.conf
+echo 'ExecStart=/usr/bin/dockerd -H fd:// -s overlay2' >> /etc/systemd/docker.d/customexec.conf
+
 apt-get update
 apt-get -y install curl linux-image-extra-$(uname -r) linux-image-extra-virtual
 apt-get -y install apt-transport-https ca-certificates
