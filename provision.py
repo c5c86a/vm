@@ -31,7 +31,8 @@ def main():
         p = Provisioner('smsc', 90)
         p.vm.execute("tail -F /tmp/firstboot.log")
     finally:
-        p.destroy()
+        if p!=None:
+            p.destroy()
 
 
 if __name__ == "__main__":
