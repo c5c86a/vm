@@ -101,7 +101,6 @@ class Server:
             data['notify_activate'] = 'no'
         response = v.vultr_post('/server/create', data)
         self.startuptime = Delorean()
-        print(response.text)
         self.subid = response['SUBID']
         try:
             while True:
