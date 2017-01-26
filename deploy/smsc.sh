@@ -96,6 +96,7 @@ docker run --name db --net=host -p 127.0.0.1:9042:9042 -p 127.0.0.1:9160:9160 -d
 sleep 20
 docker run --name smsc --net=host -e ENVCONFURL="https://raw.githubusercontent.com/RestComm/smscgateway-docker/master/env_files/restcomm_env_smsc_locally.sh" -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 restcomm/smscgateway-docker
 
+ifconfig
 docker exec -ti smsc bash /opt/Restcomm-SMSC/jboss-5.1.0.GA/bin/ss7-cli.sh -h
 
 sleep 660
