@@ -10,13 +10,14 @@ class Provisioner:
     label = None
     ip = None
 
-    def __init__(self, label, plan=29):
+    def __init__(self, label, plan=29, datacenter=9):
         """
         plan 29 is 768 MB RAM,15 GB SSD,1.00 TB BW and can be found at https://api.vultr.com/v1/plans/list
+        data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
         self.srv = Server()
-        self.ip = self.srv.create(label, plan)
+        self.ip = self.srv.create(label, plan, datacenter)
         self.vm = SSH2VM(self.ip)
         assert self.vm.is_reachable(), "VM is not reachable with ssh"
         print('is reachable')
@@ -28,7 +29,7 @@ class Provisioner:
 def main():
     p = None
     try:
-        p = Provisioner('smsc', 90)
+        p = Provisioner('smsc', 90, 1)
         p.vm.execute("tail -F /tmp/firstboot.log")
     finally:
         if p!=None:

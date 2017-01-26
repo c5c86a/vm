@@ -81,7 +81,7 @@ class Server:
     startuptime = None
     script = Script()
 
-    def create(self, label, plan):
+    def create(self, label, plan, datacenter):
         """
         Creates a new vm at vultr. Usually it takes 2 minutes.
         :param label:
@@ -90,7 +90,7 @@ class Server:
         v = VultrAPI('token')
         scriptid = self.script.create("deploy/%s.sh" % label)
         data = {
-            'DCID':      9,             # data center at Frankfurt
+            'DCID':      datacenter,             # data center at Frankfurt
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
