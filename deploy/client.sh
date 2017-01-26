@@ -29,7 +29,7 @@ deploy(){
 }
 
 run(){
-  echo 'client...'
+  python -m SimpleHTTPServer 8080 
 }
 
 ports

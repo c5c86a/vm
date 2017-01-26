@@ -32,8 +32,12 @@ def main():
     try:
         server = Provisioner('server')
         client = Provisioner('client')
-        client.vm.execute("ping -c 4 %s" % server.ip)
-        client.vm.execute("curl -X GET http://%s:8080" % server.ip)
+        right = (client.ip, server.ip)
+        left = (server.ip, client.ip)
+        client.vm.execute("%s: ping -c 4 %s" % right)
+        server.vm.execute("%s: ping -c 4 %s" % left)
+        client.vm.execute("%s: curl -X GET http://%s:8080" % right)
+        server.vm.execute("%s: curl -X GET http://%s:8080" % left)
     finally:
         if server!=None:
            server.destroy()
