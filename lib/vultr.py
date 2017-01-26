@@ -55,12 +55,12 @@ class VultrAPI():
 class Script:
     scriptid = None
     def create(self, filename):
-        """	
-        LE' https://api.vultr.com/v1/startupscript/create --data 'name=my first script' --data 'script=#!/bin/bash\necho hello world > /root/hello' 
+        """
+        LE' https://api.vultr.com/v1/startupscript/create --data 'name=my first script' --data 'script=#!/bin/bash\necho hello world > /root/hello'
         """
         v = VultrAPI('token')
         data = {
-            'name':filename,        
+            'name':filename,
             'script': open(filename).read()
         }
         response = v.vultr_post('/startupscript/create', data)
@@ -81,7 +81,7 @@ class Server:
     startuptime = None
     script = Script()
 
-    def create(self, label):
+    def create(self, label, plan):
         """
         Creates a new vm at vultr. Usually it takes 2 minutes.
         :param label:
@@ -91,7 +91,7 @@ class Server:
         scriptid = self.script.create("deploy/%s.sh" % label)
         data = {
             'DCID':      9,             # data center at Frankfurt
-            'VPSPLANID': 29,       # 768 MB RAM,15 GB SSD,1.00 TB BW
+            'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
             'SSHKEYID':  '5794ed3c1ce42',
