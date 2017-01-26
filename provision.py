@@ -26,6 +26,7 @@ def main():
     p = None
     try:
         p = Provisioner('smsc')
+        print(get(p.ip + ':8080').text)
         p.vm.execute("cat /tmp/firstboot.log")
     finally:
         p.destroy()

@@ -3,6 +3,8 @@
 set -e
 
 export DEBIAN_FRONTEND=noninteractive
+
+# vultr starts ubuntu with dpkg locked and without python installed
 killall -we 'apt-get'
 echo "start searching for 'apt-get -qq -y update' initiated by vultr..."
 ps aux | grep '[a]pt'
@@ -41,10 +43,6 @@ add-apt-repository \
 apt-get update
 apt-get -y install docker-engine || true
 
-echo '111111111111111'
-systemctl show docker
-echo '222222222222222'
-
 # ubuntu 16.04
 mkdir -p /lib/systemd/system
 echo '[Unit]' > /lib/systemd/system/docker.service
@@ -71,11 +69,6 @@ echo 'WantedBy=multi-user.target' >> /lib/systemd/system/docker.service
 systemctl daemon-reload
 systemctl start docker.service
 sleep 10
-systemctl status docker.service
-
-echo '311111111111111'
-systemctl show docker
-echo '422222222222222'
 
 adduser user
 usermod -aG docker user
@@ -85,4 +78,8 @@ docker run -d hello-world
 docker ps -a
 
 echo "finished smsc.sh" >> /log.txt
+
+apt-get -y install build-essential python-dev git 
+wget --no-check-certificate https://bootstrap.pypa.io/ez_setup.py -O - | python - 'setuptools==26.1.1'
+wget --no-check-certificate https://bootstrap.pypa.io/get-pip.py -O - | python - 'pip==8.1.2'
 python -m SimpleHTTPServer 8080 
