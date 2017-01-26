@@ -121,7 +121,6 @@ class Server:
         return self.ip
 
     def ready(self):
-        v = VultrAPI('token')
         try:
             while True:
                 if Delorean() - self.startuptime < timedelta(minutes=10):
