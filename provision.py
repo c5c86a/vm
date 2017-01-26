@@ -26,8 +26,6 @@ def main():
     p = None
     try:
         p = Provisioner('smsc')
-        url = 'http://' + p.ip + ':8080'
-        print(get(url).text)
         p.vm.execute("cat /tmp/firstboot.log")
     finally:
         p.destroy()
