@@ -69,7 +69,14 @@ echo '[Install]' >> /lib/systemd/system/docker.service
 echo 'WantedBy=multi-user.target' >> /lib/systemd/system/docker.service
 
 systemctl daemon-reload
+systemctl start docker.service
+sleep 10
 systemctl status docker.service
+
+echo '311111111111111'
+systemctl show docker
+echo '422222222222222'
+
 adduser user
 usermod -aG docker user
 service docker restart
