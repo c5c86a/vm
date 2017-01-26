@@ -21,6 +21,7 @@ ports(){
   ufw default deny incoming
   ufw default allow outgoing
   ufw allow ssh
+  ufw allow 3435/tcp
   ufw allow 8080/tcp
   ufw allow 443/tcp  # HTTPS
   # access to docker provisioner
@@ -96,3 +97,5 @@ sleep 20
 docker run --name smsc --net=host -e ENVCONFURL="https://raw.githubusercontent.com/RestComm/smscgateway-docker/master/env_files/restcomm_env_smsc_locally.sh" -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 restcomm/smscgateway-docker
 
 docker exec -ti smsc bash /opt/Restcomm-SMSC/jboss-5.1.0.GA/bin/ss7-cli.sh -h
+
+sleep 660
