@@ -99,4 +99,4 @@ docker run --name smsc --net=host -e ENVCONFURL="https://raw.githubusercontent.c
 ifconfig
 docker exec -ti smsc bash /opt/Restcomm-SMSC/jboss-5.1.0.GA/bin/ss7-cli.sh -h
 
-sleep 660
+docker logs -f smsc
