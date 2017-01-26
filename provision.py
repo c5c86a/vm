@@ -30,7 +30,8 @@ def main():
     p = None
     try:
         p = Provisioner('smsc', 90, 1)
-        p.vm.execute("tail -F /tmp/firstboot.log")
+        sleep(500)
+        p.vm.execute("cat /tmp/firstboot.log")
     finally:
         if p!=None:
             p.destroy()
