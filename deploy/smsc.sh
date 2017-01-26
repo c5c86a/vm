@@ -93,8 +93,9 @@ wget --no-check-certificate https://bootstrap.pypa.io/get-pip.py -O - | python -
 #python -m SimpleHTTPServer 8080 
 
 docker run --name db --net=host -p 0.0.0.0:9042:9042 -p 0.0.0.0:9160:9160 -d cassandra:2.0
-sleep 20
+sleep 120
 docker run --name smsc --net=host -e ENVCONFURL="https://raw.githubusercontent.com/RestComm/smscgateway-docker/master/env_files/restcomm_env_smsc_locally.sh" -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 restcomm/smscgateway-docker
+sleep 120
 
 ifconfig
 docker exec -ti smsc bash /opt/Restcomm-SMSC/jboss-5.1.0.GA/bin/ss7-cli.sh -h
