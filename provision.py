@@ -33,6 +33,7 @@ def main():
         server = Provisioner('server')
         client = Provisioner('client')
         client.vm.execute("ping -c 4 %s" % server.ip)
+        client.vm.execute("curl -X GET http://%s:8080" % server.ip)
     finally:
         if server!=None:
            server.destroy()

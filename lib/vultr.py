@@ -109,10 +109,10 @@ class Server:
                     if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                         self.ip = srv['main_ip']
                         break
-                    eprint("Waiting for vultr to create server")
+                    eprint("Waiting for vultr to create " + label)
                     sleep(10)
                 else:
-                    assert False, 'Failed to get status of new server within 5 minutes'
+                    assert False, "Failed to get status of new %s within 5 minutes" % label
         except:
             self.destroy()
             raise
