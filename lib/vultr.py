@@ -106,7 +106,7 @@ class Server:
             while True:
                 if Delorean() - self.startuptime < timedelta(minutes=10):
                     srv = v.vultr_get('/server/list', {'SUBID': self.subid})
-                    if srv['main_ip'] != '0':
+                    if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                         self.ip = srv['main_ip']
                         break
                     eprint("Waiting for vultr to create " + label)
@@ -120,22 +120,6 @@ class Server:
             raise
         return self.ip
 
-    def ready(self):
-        try:
-            while True:
-                if Delorean() - self.startuptime < timedelta(minutes=10):
-                    srv = v.vultr_get('/server/list', {'SUBID': self.subid})
-                    if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
-                        self.ip = srv['main_ip']
-                        break
-                    eprint("Waiting for vultr to create vm")
-                    sleep(10)
-                else:
-                    assert False, "Failed to get status of new vm within 5 minutes"
-        except:
-            self.destroy()
-            raise
- 
     def destroy(self):
         while True:
             if Delorean() - self.startuptime < timedelta(minutes=5):

@@ -18,12 +18,9 @@ class Provisioner:
         self.label = label
         self.srv = Server()
         self.ip = self.srv.create(label, plan, datacenter)
-
-    def ready(self):
-        self.srv.ready()
         self.vm = SSH2VM(self.ip)
         assert self.vm.is_reachable(), "VM is not reachable with ssh"
-        print("%s is reachable with ssh" % self.ip)
+        print('is reachable')
 
     def destroy(self):
         self.srv.destroy()
@@ -35,8 +32,6 @@ def main():
     try:
         server = Provisioner('server')
         client = Provisioner('client')
-        server.ready()
-        client.ready()
         client.vm.execute("ping -c 4 %s" % server.ip)
         client.vm.execute("curl -X GET http://%s:8080" % server.ip)
     finally:
