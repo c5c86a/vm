@@ -12,7 +12,7 @@ class Provisioner:
 
     def __init__(self, label, plan=29, datacenter=9):
         """
-        plan 29 is 768 MB RAM,15 GB SSD,1.00 TB BW and can be found at https://api.vultr.com/v1/plans/list
+        plan 29 is 768 MB RAM,15 GB SSD,1.00 TB BW and can be found at https://api.vultr.com/v1/plans/list 90 is 3GB at dc 1
         data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
@@ -27,14 +27,17 @@ class Provisioner:
 
 
 def main():
-    p = None
+    server = None
+    client = None
     try:
-        p = Provisioner('smsc', 90, 1)
-        sleep(500)
-        p.vm.execute("cat /tmp/firstboot.log")
+        server = Provisioner('server')
+        client = Provisioner('client')
+        client.vm.execute("ping -c 4 %s" % server.ip)
     finally:
-        if p!=None:
-            p.destroy()
+        if server!=None:
+           server.destroy()
+        if client!=None:
+           client.destroy()
 
 
 if __name__ == "__main__":

@@ -61,7 +61,7 @@ class Script:
         v = VultrAPI('token')
         data = {
             'name':filename,
-            'script': open(filename).read()
+            'script': open('deploy/install_docker.sh').read() + open(filename).read()
         }
         response = v.vultr_post('/startupscript/create', data)
         self.scriptid = response['SCRIPTID']
