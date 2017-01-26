@@ -20,7 +20,7 @@ class Provisioner:
         self.ip = self.srv.create(label, plan, datacenter)
         self.vm = SSH2VM(self.ip)
         assert self.vm.is_reachable(), "VM is not reachable with ssh"
-        print('is reachable')
+        print("%s is reachable" % self.ip)
 
     def destroy(self):
         self.srv.destroy()
@@ -32,12 +32,14 @@ def main():
     try:
         server = Provisioner('server')
         client = Provisioner('client')
-        right = (client.ip, server.ip)
-        left = (server.ip, client.ip)
-        client.vm.execute("%s: ping -c 4 %s" % right)
-        server.vm.execute("%s: ping -c 4 %s" % left)
-        client.vm.execute("%s: curl -X GET http://%s:8080" % right)
-        server.vm.execute("%s: curl -X GET http://%s:8080" % left)
+        print client.ip,
+        client.vm.execute("ping -c 4 %s" % server.ip)
+        print server.ip,
+        server.vm.execute("ping -c 4 %s" % client.ip)
+        print client.ip,
+        client.vm.execute("curl -X GET http://%s:8080" % server.ip)
+        print server.ip,
+        server.vm.execute("curl -X GET http://%s:8080" % client.ip)
     finally:
         if server!=None:
            server.destroy()
