@@ -87,6 +87,7 @@ class Server:
         :param label:
         :return: ip
         """
+        self.label = label
         v = VultrAPI('token')
         scriptid = self.script.create("deploy/%s.sh" % label)
         data = {
@@ -102,6 +103,9 @@ class Server:
         response = v.vultr_post('/server/create', data)
         self.startuptime = Delorean()
         self.subid = response['SUBID']
+
+    def getip(self):
+        v = VultrAPI('token')
         try:
             while True:
                 if Delorean() - self.startuptime < timedelta(minutes=10):
@@ -109,10 +113,10 @@ class Server:
                     if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
                         self.ip = srv['main_ip']
                         break
-                    eprint("Waiting for vultr to create " + label)
+                    eprint("Waiting for vultr to create " + self.label)
                     sleep(10)
                 else:
-                    assert False, "Failed to get status of new %s within 5 minutes" % label
+                    assert False, "Failed to get status of new %s within 5 minutes" % self.label
         except:
             self.destroy()
             raise

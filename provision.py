@@ -5,6 +5,9 @@ from lib.ssh2vm import SSH2VM
 
 from requests import post, get
 from time import sleep
+import socket
+import errno
+from time import time as now
 
 
 def eprint(*args, **kwargs):
@@ -13,28 +16,22 @@ def eprint(*args, **kwargs):
 
 def wait_net_service(server, port, timeout=None):
     """ Wait for network service to appear
-        @param timeout: in seconds, if None or 0 wait forever
+        @param timeout: in seconds
         @return: True of False, if timeout is None may return only True or
                  throw unhandled network exception
     """
-    import socket
-    import errno
-
     s = socket.socket()
-    if timeout:
-        from time import time as now
-        # time module is needed to calc timeout shared between two exceptions
-        end = now() + timeout
+    # time module is needed to calc timeout shared between two exceptions
+    end = now() + timeout
 
     while True:
-        eprint("trying to connect to %s at port %d"(server, port))
+        eprint("trying to connect to %s at port %d" % (server, port))
         try:
-            if timeout:
-                next_timeout = end - now()
-                if next_timeout < 0:
-                    return False
-                else:
-                    s.settimeout(next_timeout)
+            next_timeout = end - now()  # connect might not respect our timeout so we try again until reaching it
+            if next_timeout < 0:
+                return False
+            else:
+                s.settimeout(next_timeout)
             s.connect((server, port))
 
         except socket.timeout, err:
@@ -44,7 +41,7 @@ def wait_net_service(server, port, timeout=None):
             if type(err.args) != tuple or err[0] != errno.ETIMEDOUT:
                 raise
             else:
-                eprint("waiting 10 seconds for %s to open port %d" (server, port))
+                eprint("waiting 10 seconds for %s to open port %d" % (server, port))
                 sleep(10)
         else:
             s.close()
@@ -63,11 +60,7 @@ class Provisioner:
         """
         self.label = label
         self.srv = Server()
-        self.ip = self.srv.create(label, plan, datacenter)
-        self.vm = SSH2VM(self.ip)
-        msg = (label, self.ip)
-        assert self.vm.is_reachable(), "%s is not reachable with ssh at %s" % msg
-        eprint("ssh port of %s is ready at %s" % msg)
+        self.srv.create(label, plan, datacenter)
 
     def destroy(self):
         self.srv.destroy()
@@ -79,6 +72,10 @@ def main():
     try:
         server = Provisioner('server')
         client = Provisioner('client')
+
+        server.ip = server.srv.getip()
+        client.ip = client.srv.getip()
+
         for port in [22, 8080]:
             for ip in [server.ip, client.ip]:   # wait until travis is about to kill the job and then fail
                 assert wait_net_service(ip, port, 60), "Expected port 8080 of %s to be up" % ip
