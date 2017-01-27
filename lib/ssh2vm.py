@@ -15,17 +15,7 @@ env.connection_attempts = 5
 class SSH2VM:
     def __init__(self, ip):
         self.ip = ip
-    def cmd(command):
-        array = ["ssh",
-               "-i", "key",
-               "-o", "StrictHostKeyChecking=no",
-               "-o", "KbdInteractiveDevices=no",
-               "-o", "BatchMode=yes",
-               "%s@%s" % ('root', self.ip),
-               "date"]
-        pid = Popen(array, stdout=PIPE, stderr=PIPE)
-        return pid.communicate()
- 
+
     def is_reachable(self):
         result = False
         array = ["ssh",
@@ -47,6 +37,7 @@ class SSH2VM:
                     result = True
                     break
         return result
+
     def upload(self, local_path):
         with settings(host_string='root@'+self.ip, key_filename='key'):
             put(local_path, '')
