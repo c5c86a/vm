@@ -37,8 +37,7 @@ def wait_net_service(server, port, timeout=None):
         except socket.timeout, err:
             return False
         except socket.error, err:
-            # catch timeout exception from underlying network library
-            if type(err.args) != tuple or err[0] != errno.ETIMEDOUT:
+            if type(err.args) != tuple or (err[0] != errno.ETIMEDOUT and err[0] == errno.ECONNREFUSED):
                 raise
             else:
                 eprint("waiting 10 seconds for %s to open port %d" % (server, port))
