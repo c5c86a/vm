@@ -36,6 +36,7 @@ def main():
         client.vm.execute("ping -c 4 %s" % server.ip)
         server.vm.execute("ping -c 4 %s" % client.ip)
         client.vm.execute("curl -X GET http://%s:8080" % server.ip)
+        sleep(60)
         server.vm.execute("curl -X GET http://%s:8080" % client.ip)
     finally:
         if server!=None:
