@@ -21,7 +21,6 @@ def wait_net_service(server, port, timeout=None):
                  throw unhandled network exception
     """
     s = socket.socket()
-    # time module is needed to calc timeout shared between two exceptions
     end = now() + timeout
 
     while True:
@@ -34,11 +33,10 @@ def wait_net_service(server, port, timeout=None):
                 s.settimeout(next_timeout)
             s.connect((server, port))
 
-        except socket.timeout, err:
+        except socket.timeout:
             return False
         except socket.error, err:
-            # catch timeout exception from underlying network library
-            if type(err.args) != tuple or err[0] != errno.ETIMEDOUT:
+            if type(err.args) != tuple or (err[0] != errno.ETIMEDOUT and err[0] == errno.ECONNREFUSED):
                 raise
             else:
                 eprint("waiting 10 seconds for %s to open port %d" % (server, port))
@@ -78,7 +76,7 @@ def main():
 
         for port in [22, 8080]:
             for ip in [server.ip, client.ip]:   # wait 10 minutes (until travis is about to kill the job) and then fail
-                assert wait_net_service(ip, port, 560), "Expected port 8080 of %s to be up" % ip
+                assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
     finally:
         if server!=None:
            server.destroy()

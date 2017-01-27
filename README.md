@@ -3,5 +3,5 @@
 # vm
 
 1. Create VMs at vultr in parallel
-2. Wait until port is listening
-3. Show logs until port is listening
+2. Wait until all application ports are listening
+3. Show all log files if any application port is not listening after 10 minutes
