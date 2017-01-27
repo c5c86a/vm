@@ -120,7 +120,8 @@ class Server:
         except:
             self.destroy()
             raise
-        assert self.ip!=None
+        if self.ip==None:
+            raise
         return self.ip
 
     def destroy(self):
