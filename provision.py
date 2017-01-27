@@ -6,7 +6,7 @@ from lib.ssh2vm import SSH2VM
 from requests import post, get
 from time import sleep
 import socket
-import errno
+from errno import *
 from time import time as now
 
 
@@ -37,8 +37,9 @@ def wait_net_service(server, port, timeout=None):
         except socket.timeout, err:
             return False
         except socket.error, err:
-            if err[0] != errno.ETIMEDOUT and err[0] != errno.ECONNREFUSED:
-                raise
+            codes = [ETIMEDOUT, ECONNABORTED, ECONNREFUSED]
+            if err[0] not in codes:
+                assert False, err
             else:
                 eprint("waiting 10 seconds for %s to open port %d" % (server, port))
                 sleep(10)
