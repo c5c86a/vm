@@ -1,8 +1,14 @@
+from __future__ import print_function
+import sys
 from lib.vultr import Server
 from lib.ssh2vm import SSH2VM
 
 from requests import post, get
 from time import sleep
+
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
 
 
 def wait_net_service(server, port, timeout=None):
@@ -21,6 +27,7 @@ def wait_net_service(server, port, timeout=None):
         end = now() + timeout
 
     while True:
+        eprint("trying to connect to %s at port %d"(server, port))
         try:
             if timeout:
                 next_timeout = end - now()
@@ -37,7 +44,7 @@ def wait_net_service(server, port, timeout=None):
             if type(err.args) != tuple or err[0] != errno.ETIMEDOUT:
                 raise
             else:
-                print("waiting 10 seconds for %s to open port %d" (server, port))
+                eprint("waiting 10 seconds for %s to open port %d" (server, port))
                 sleep(10)
         else:
             s.close()
@@ -60,7 +67,7 @@ class Provisioner:
         self.vm = SSH2VM(self.ip)
         msg = (label, self.ip)
         assert self.vm.is_reachable(), "%s is not reachable with ssh at %s" % msg
-        print("ssh port of %s is ready at at %s" % msg)
+        eprint("ssh port of %s is ready at %s" % msg)
 
     def destroy(self):
         self.srv.destroy()
@@ -72,13 +79,9 @@ def main():
     try:
         server = Provisioner('server')
         client = Provisioner('client')
-        client.vm.execute("ping -c 4 %s" % server.ip)
-        server.vm.execute("ping -c 4 %s" % client.ip)
-        client.vm.execute("curl -X GET http://%s:8080" % server.ip)
-        for ip in [server.ip, client.ip]:   # wait until travis is about to kill the job and then fail
-            assert wait_net_service(ip, 8080, 60), "Expected port 8080 of %s to be up" % ip
-        sleep(60)
-        server.vm.execute("curl -X GET http://%s:8080" % client.ip)
+        for port in [22, 8080]:
+            for ip in [server.ip, client.ip]:   # wait until travis is about to kill the job and then fail
+                assert wait_net_service(ip, port, 60), "Expected port 8080 of %s to be up" % ip
     finally:
         if server!=None:
            server.destroy()
