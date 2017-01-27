@@ -77,8 +77,8 @@ def main():
         client.ip = client.srv.getip()
 
         for port in [22, 8080]:
-            for ip in [server.ip, client.ip]:   # wait until travis is about to kill the job and then fail
-                assert wait_net_service(ip, port, 60), "Expected port 8080 of %s to be up" % ip
+            for ip in [server.ip, client.ip]:   # wait 10 minutes (until travis is about to kill the job) and then fail
+                assert wait_net_service(ip, port, 560), "Expected port 8080 of %s to be up" % ip
     finally:
         if server!=None:
            server.destroy()
