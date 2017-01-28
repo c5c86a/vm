@@ -96,7 +96,7 @@ class Server:
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
             'SSHKEYID':  '5794ed3c1ce42',
-            'SCRIPTID':  scriptid
+            'SCRIPTID':  scriptid       # at digitalocean this is called user_data and the format of the value is cloud-config
         }
         if label.startswith('test'):
             data['notify_activate'] = 'no'

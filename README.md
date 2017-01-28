@@ -1,30 +1,54 @@
 [![Travis build status](https://travis-ci.org/nicosmaris/vm.png?branch=master)](https://travis-ci.org/nicosmaris/vm)
 
-# vm
+#### vm
 
-This minimal python library helps you set up a network of a few virtual machines
-without the learning curve of orchestration platforms like Kubernetes, Mesosphere and Docker Swarm.
+If you are a developer and you need the following, this minimal python library might help you.
+
+1. a demo of your software
+2. a few virtual machines in an automated setup to minimize cost of VM and risk of human error. You want Vultr because it is a cheap cloud provider but you don't want to learn its API.
+3. you don't want to learn any orchestration platform
+
+Whether you use docker or not, in this case you don't need Kubernetes, Mesosphere, Docker Swarm or even Ansible, Puppet, Chef or Salt.
+
+We assume that you know enough bash and python to adapt this library to your needs.
+
+The goal is to keep this library to a minimum without making yet another orchestration platform.
+If your needs become bigger, you should use an orchestration platform and by that time you will know which scripts belong to the developer and which scripts belong to the devop.
+
+#### Features
 
 1. Create VMs at vultr in parallel
 2. Wait until port is listening
 3. Show logs if a port is not listening until a given timeout
-4. Optionally, destroy VMs in the end (for use at CI)
+
+#### Requirements
+
+1. pip install -r requirements.txt
+2. private key (unversioned...) at a file named `key` at current directory
+3. token of an account at vultr (unversioned...) at a file named `token` at current directory
+
+#### Input
+
+For each argument x that you put at class Provisioner, you can put the following files at folder deploy.
+
+1. boot_x.sh which runs on boot
+2. start_x.sh that is uploaded after startup_x.sh is ready and run
+3. if there are other *x.sh files, then they are uploaded to the corresponding VM and executed in order.
+
+The file input.yml has the following format:
 
 ```
-key: path_to_private_key
-vultr: path_to_vultr_token
-loggly: path_to_loggly_token_if_any
 servers:
-  - startup: path_to_startup_script_if_any 
-    logs: path to logs, if any
-    startup_ports: 8080
-    name: server
-  - startup: path_to_startup_script_if_any 
-    logs: path to logs, if any
-    startup_ports: 22
-    name: client
-    script: path to script to replace dependency with ip, upload it and run it. if any
-    dependency:
-        db: server
-    script_ports: 22
+  - name: server
+    boot:                             (optional)
+        logs:                         (optional, if they are given, their content is shown in case of error)
+        - 'full path to a log file'
+        ports: 8080                   (waits until these ports are up. mandatory if there is a boot_x.sh)
+    start:
+        logs:                         (optional, if they are given, their content is shown in case of error)
+        - 'full path to a log file'
+        ports: 8080                   (waits until these ports are up. mandatory if there is a start_x.sh)
+        dependencies:                 (optional)
+            db: server                (sets env var db with value the IP of the server with name 'server')
+    ci: true                          (optional, if true, it destroys VMs in the end, default is false)
 ```
