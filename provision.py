@@ -44,6 +44,7 @@ def wait_net_service(server, port, timeout=None):
                 eprint("waiting 10 seconds for %s to open port %d" % (server, port))
                 sleep(10)
         else:
+            
             s.close()
             return True
 
@@ -70,12 +71,15 @@ def main():
     server = None
     client = None
     try:
+        # creates all IPs as a VM might use the IP of another VM
         server = Provisioner('server')
         client = Provisioner('client')
 
         server.ip = server.srv.getip()
-        client.ip = client.srv.getip()
-
+        client.ip = client.srv.getip()       
+        # sets env var of each VM if any, uploads script and runs it
+        
+        # checks ports of each VM
         for port in [22, 8080]:
             for ip in [server.ip, client.ip]:   # wait 10 minutes (until travis is about to kill the job) and then fail
                 assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
