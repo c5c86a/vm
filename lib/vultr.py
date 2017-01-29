@@ -67,7 +67,7 @@ class Script:
             'script': script
         }
         response = v.vultr_post('/startupscript/create', data)
-        assert 'SCRIPTID' in response.keys(), response
+        assert False, response
         self.scriptid = response['SCRIPTID']
         return self.scriptid
 
