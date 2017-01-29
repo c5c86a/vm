@@ -2,6 +2,8 @@
 
 #### vm
 
+Note that this repository is experimental and there is no plan yet of packaging it to pip.
+
 If you are a developer and you need the following, this minimal python library might help you.
 
 1. a demo of your software
