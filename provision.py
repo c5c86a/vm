@@ -3,13 +3,11 @@ import sys
 from lib.vultr import Server
 from lib.ssh2vm import SSH2VM
 
-from requests import post, get
 from time import sleep
 import socket
 from errno import *
 from time import time as now
 import yaml
-import glob
 from os.path import basename
 
 
@@ -78,10 +76,11 @@ def main():
         # creates all IPs as a VM might use the IP of another VM
         for server in servers_info:
             name = server['name']
-            if 'script' in server['boot'].keys():
-                server['provisioner'] = Provisioner(name, boot=server['boot']['script'])
-            else:
-                server['provisioner'] = Provisioner(name)
+            if 'boot' in server.keys():
+                if 'script' in server['boot'].keys():
+                    server['provisioner'] = Provisioner(name, boot=server['boot']['script'])
+                else:
+                    server['provisioner'] = Provisioner(name)
 
         for server in servers_info:
             server['ip'] = server['provisioner'].srv.getip()
