@@ -115,7 +115,7 @@ def main():
                     ip = server['ip']
                     assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
     finally:
-        if 'ci' in servers_info.keys() and servers_info['ci']:
+        if 'ci' in yml.keys() and yml['ci']:
             for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
                 if 'provisioner' in server.keys():
                     server['provisioner'].destroy()
