@@ -83,8 +83,8 @@ def main():
         # creates all IPs as a VM might use the IP of another VM
         for server in servers_info:
             name = server['name']
-            if 'boot' in server.keys():
-                server['provisioner'] = Provisioner(name, boot=server['boot'])
+            if 'boot' in server.keys() and len(server['boot']):
+                server['provisioner'] = Provisioner(name, boot=server['boot'][0])
             else:
                 server['provisioner'] = Provisioner(name)
 
