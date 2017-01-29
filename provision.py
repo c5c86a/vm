@@ -87,7 +87,7 @@ def main():
         # checks ports of each VM
         for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
             for port in server['boot']['ports']:
-                ip = int(server['ip'])
+                ip = server['ip']
                 assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
         # TODO: sets env var of each VM if any, uploads script and runs it
     finally:
