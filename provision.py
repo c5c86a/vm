@@ -87,9 +87,10 @@ def main():
             server['ip'] = server['provisioner'].srv.getip()
         # checks ports of each VM
         for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
-            for port in server['boot']['ports']:
-                ip = server['ip']
-                assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
+            if 'boot' in server.keys() and 'ports' in server['boot'].keys():
+                for port in server['boot']['ports']:
+                    ip = server['ip']
+                    assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
         # sets env var of each VM if any, uploads script and runs it
         for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
             if 'start' in server.keys():
@@ -109,7 +110,7 @@ def main():
                         ssh.execute("bash %s" % filename)
         # checks ports of each VM
         for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
-            if 'start' in server.keys():
+            if 'start' in server.keys() and 'ports' in server['start'].keys():
                 for port in server['start']['ports']:
                     ip = server['ip']
                     assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
