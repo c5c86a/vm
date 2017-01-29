@@ -10,6 +10,7 @@ from errno import *
 from time import time as now
 import yaml
 import glob
+from os.path import basename
 
 
 def eprint(*args, **kwargs):
@@ -89,7 +90,26 @@ def main():
             for port in server['boot']['ports']:
                 ip = server['ip']
                 assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
-        # TODO: sets env var of each VM if any, uploads script and runs it
+        # sets env var of each VM if any, uploads script and runs it
+        for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
+            if 'start' in server.keys():
+                if 'dependencies' in server.keys():
+                    for dependency in server['dependencies']:
+                        name = server['dependencies'][dependency]
+                        for other_server in servers_info:
+                            if other_server['name'] == name:
+                                server['dependencies'][dependency] = other_server['ip']
+                if 'script' in server['start'].keys():
+                    ssh = SSH2VM(server['ip'])
+                    ssh.upload(server['start']['script'])
+                    filename = basename(server['start']['script'])
+                    ssh.execute("bash %s" % filename, server['dependencies'])
+        # checks ports of each VM
+        for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
+            if 'start' in server.keys():
+                for port in server['start']['ports']:
+                    ip = server['ip']
+                    assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
     finally:
         for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
             if 'provisioner' in server.keys():

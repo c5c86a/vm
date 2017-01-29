@@ -43,7 +43,7 @@ servers:
         logs:                         (optional, if they are given, their content is shown in case of error)
         - 'full path to a log file'
         ports: 8080                   (waits until these ports are up. mandatory if there is a boot_x.sh)
-    start:
+    start:                            (optional)
         logs:                         (optional, if they are given, their content is shown in case of error)
         - 'full path to a log file'
         ports: 8080                   (waits until these ports are up. mandatory if there is a start_x.sh)

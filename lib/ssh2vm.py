@@ -5,7 +5,7 @@ from time import sleep
 from subprocess import Popen, PIPE
 
 from fabric.operations import run, put
-from fabric.context_managers import settings
+from fabric.context_managers import settings, shell_env
 from fabric.state import env
 
 import sys
@@ -42,12 +42,16 @@ class SSH2VM:
         with settings(host_string='root@'+self.ip, key_filename='key'):
             put(local_path, '')
 
-    def execute(self, command):
+    def execute(self, command, env_vars_dict=None):
         """
         The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
         """
-        with settings(host_string='root@'+self.ip, key_filename='key'):
-            run(command, stdout=sys.stdout, stderr=sys.stderr)
+        if env_vars_dict==None:
+            with settings(host_string='root@'+self.ip, key_filename='key'):
+                run(command, stdout=sys.stdout, stderr=sys.stderr)
+        else:
+            with settings(shell_env(**env_vars_dict), host_string='root@' + self.ip, key_filename='key'):
+                run(command, stdout=sys.stdout, stderr=sys.stderr)
 
     def daemon(self, command):
         """

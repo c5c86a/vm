@@ -1,17 +1,24 @@
+ci: true
 servers:
-  - name: server
+  - name: db
     boot:
         script: deploy/boot_server.sh
         logs:
         - 'full path to a log file'
         ports:
-        - 8080
+        - 9042
+  - name: app
+    boot:
+        script: deploy/boot_server.sh
+        logs:
+        - 'full path to a log file'
+        ports:
+        - 9042
     start:
         script: deploy/start_server.sh
         logs:
         - 'full path to a log file'
         ports:
-        - 8081
+        - 8080
         dependencies:
-            db: server
-    ci: true
+            CASSANDRA_IP: db

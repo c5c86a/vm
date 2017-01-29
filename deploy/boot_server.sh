@@ -29,7 +29,7 @@ deploy(){
 }
 
 run(){
-  python -m SimpleHTTPServer 8080 
+  python -m SimpleHTTPServer 9042
 }
 
 ports
