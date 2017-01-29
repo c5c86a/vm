@@ -103,7 +103,10 @@ def main():
                     ssh = SSH2VM(server['ip'])
                     ssh.upload(server['start']['script'])
                     filename = basename(server['start']['script'])
-                    ssh.execute("bash %s" % filename, server['dependencies'])
+                    if 'dependencies' in server.keys():
+                        ssh.execute("bash %s" % filename, server['dependencies'])
+                    else:
+                        ssh.execute("bash %s" % filename)
         # checks ports of each VM
         for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
             if 'start' in server.keys():
@@ -111,9 +114,10 @@ def main():
                     ip = server['ip']
                     assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
     finally:
-        for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
-            if 'provisioner' in server.keys():
-                server['provisioner'].destroy()
+        if 'ci' in servers_info.keys() and servers_info['ci']:
+            for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
+                if 'provisioner' in server.keys():
+                    server['provisioner'].destroy()
 
 
 if __name__ == "__main__":
