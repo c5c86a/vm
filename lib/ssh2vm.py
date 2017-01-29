@@ -22,28 +22,6 @@ class SSH2VM:
     def __init__(self, ip):
         self.ip = ip
 
-    def is_reachable(self):
-        result = False
-        array = ["ssh",
-               "-i", "key",
-               "-o", "StrictHostKeyChecking=no",
-               "-o", "KbdInteractiveDevices=no",
-               "-o", "BatchMode=yes",
-               "%s@%s" % ('root', self.ip),
-               "date"]
-
-        first_attempt = Delorean()
-        while True:
-            if Delorean() - first_attempt < timedelta(minutes=5):
-	        sleep(10)
-            else:
-                pid = Popen(array, stdout=PIPE, stderr=PIPE)
-                out, err = pid.communicate()                         # executes command
-                if pid.returncode==0:
-                    result = True
-                    break
-        return result
-
     def upload(self, local_path):
         with settings(host_string='root@'+self.ip, key_filename='key'):
             put(local_path, '')
@@ -65,7 +43,6 @@ class SSH2VM:
         """
         with settings(host_string='root@'+self.ip, key_filename='key'):
             run("nohup %s >& /dev/null < /dev/null &" % command, pty=False, stdout=sys.stdout, stderr=sys.stderr) # http://docs.fabfile.org/en/1.5/faq.html
-
 
     def wait_net_service(self, port, timeout=None):
         """ Wait for network service to appear
