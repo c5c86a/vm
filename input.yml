@@ -1,19 +1,15 @@
 ci: true
 servers:
-  - name: db
+  - name: db1
     boot:
-        script: deploy/boot_server.sh
+        script: deploy/boot_db.sh
         logs:
         - 'full path to a log file'
         ports:
         - 9042
-  - name: app
-    boot:
-        script: deploy/boot_server.sh
-        logs:
-        - 'full path to a log file'
+  - name: app1
     start:
-        script: deploy/start_server.sh
+        script: deploy/start_ss7cli.sh
         logs:
         - 'full path to a log file'
         ports:

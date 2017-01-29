@@ -8,7 +8,7 @@ ports(){
   ufw default deny incoming
   ufw default allow outgoing
   ufw allow ssh
-  ufw allow 3435/tcp
+  ufw allow 9042/tcp # cassandra
   ufw allow 8080/tcp
   ufw allow 443/tcp  # HTTPS
   # access to docker provisioner
