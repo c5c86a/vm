@@ -3,11 +3,13 @@ servers:
     boot:
         logs:
         - 'full path to a log file'
-        ports: 8080
+        ports:
+        - 8080
     start:
         logs:
         - 'full path to a log file'
-        ports: 8081
+        ports:
+        - 8081
         dependencies:
             db: server
     ci: true
