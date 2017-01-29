@@ -31,9 +31,8 @@ If your needs become bigger, you should use an orchestration platform and by tha
 
 For each argument x that you put at class Provisioner, you can put the following files at folder deploy.
 
-1. boot_x.sh which runs on boot
-2. start_x.sh that is uploaded after startup_x.sh is ready and run
-3. if there are other *x.sh files, then they are uploaded to the corresponding VM and executed in order.
+1. boot_x.sh runs on boot
+2. start_x.sh is uploaded after startup_x.sh is ready and then it is executed
 
 The file input.yml has the following format:
 

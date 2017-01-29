@@ -8,6 +8,8 @@ from time import sleep
 import socket
 from errno import *
 from time import time as now
+import yaml
+import glob
 
 
 def eprint(*args, **kwargs):
@@ -54,40 +56,50 @@ class Provisioner:
     label = None
     ip = None
 
-    def __init__(self, label, plan=29, datacenter=9):
+    def __init__(self, label, plan=29, datacenter=9, boot=None):
         """
         plan 29 is 768 MB RAM,15 GB SSD,1.00 TB BW and can be found at https://api.vultr.com/v1/plans/list 90 is 3GB at dc 1
         data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
         self.srv = Server()
-        self.srv.create(label, plan, datacenter)
+        self.srv.create(label, plan, datacenter, boot)
 
     def destroy(self):
         self.srv.destroy()
 
 
 def main():
-    server = None
-    client = None
+    yml = yaml.load(open('input.yml').read())
+    assert 'servers' in yml.keys(), yml
+    servers_info = yml['servers']
+
+    for server in servers_info:
+        name = server['name']
+        server['boot'] = glob.glob("deploy/boot*%s.sh" % name)
+        server['start'] = glob.glob("deploy/start*%s.sh" % name)
+
     try:
         # creates all IPs as a VM might use the IP of another VM
-        server = Provisioner('server')
-        client = Provisioner('client')
+        for server in servers_info:
+            name = server['name']
+            if 'boot' in server.keys():
+                server['provisioner'] = Provisioner(name, boot=server['boot'])
+            else:
+                server['provisioner'] = Provisioner(name)
 
-        server.ip = server.srv.getip()
-        client.ip = client.srv.getip()       
-        # sets env var of each VM if any, uploads script and runs it
-        
+        for server in servers_info:
+            server['ip'] = server['provisioner'].srv.getip()
         # checks ports of each VM
-        for port in [22, 8080]:
-            for ip in [server.ip, client.ip]:   # wait 10 minutes (until travis is about to kill the job) and then fail
+        for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
+            for port in server['boot']['ports']:
+                ip = server['ip']
                 assert wait_net_service(ip, port, 560), "Expected port %d of %s to be up" % (port, ip)
+        # TODO: sets env var of each VM if any, uploads script and runs it
     finally:
-        if server!=None:
-           server.destroy()
-        if client!=None:
-           client.destroy()
+        for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
+            if 'provisioner' in server.keys():
+                server['provisioner'].destroy()
 
 
 if __name__ == "__main__":

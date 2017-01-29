@@ -59,9 +59,12 @@ class Script:
         LE' https://api.vultr.com/v1/startupscript/create --data 'name=my first script' --data 'script=#!/bin/bash\necho hello world > /root/hello'
         """
         v = VultrAPI('token')
+        script = open('deploy/install_docker.sh').read()
+        if filename!=None:
+            script += open(filename).read()
         data = {
             'name':filename,
-            'script': open('deploy/install_docker.sh').read() + open(filename).read()
+            'script': script
         }
         response = v.vultr_post('/startupscript/create', data)
         self.scriptid = response['SCRIPTID']
@@ -81,7 +84,7 @@ class Server:
     startuptime = None
     script = Script()
 
-    def create(self, label, plan, datacenter):
+    def create(self, label, plan, datacenter, boot):
         """
         Creates a new vm at vultr. Usually it takes 2 minutes.
         :param label:
@@ -89,7 +92,7 @@ class Server:
         """
         self.label = label
         v = VultrAPI('token')
-        scriptid = self.script.create("deploy/%s.sh" % label)
+        scriptid = self.script.create(boot)
         data = {
             'DCID':      datacenter,             # data center at Frankfurt
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW

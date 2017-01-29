@@ -1,0 +1,13 @@
+servers:
+  - name: server
+    boot:
+        logs:
+        - 'full path to a log file'
+        ports: 8080
+    start:
+        logs:
+        - 'full path to a log file'
+        ports: 8081
+        dependencies:
+            db: server
+    ci: true
