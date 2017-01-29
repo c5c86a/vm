@@ -1,11 +1,13 @@
 servers:
   - name: server
     boot:
+        script: deploy/boot_server.sh
         logs:
         - 'full path to a log file'
         ports:
         - 8080
     start:
+        script: deploy/start_server.sh
         logs:
         - 'full path to a log file'
         ports:

@@ -73,18 +73,12 @@ def main():
     yml = yaml.load(open('input.yml').read())
     assert 'servers' in yml.keys(), yml
     servers_info = yml['servers']
-
-    for server in servers_info:
-        name = server['name']
-        server['boot'] = glob.glob("deploy/boot*%s.sh" % name)
-        server['start'] = glob.glob("deploy/start*%s.sh" % name)
-
     try:
         # creates all IPs as a VM might use the IP of another VM
         for server in servers_info:
             name = server['name']
-            if 'boot' in server.keys() and len(server['boot']):
-                server['provisioner'] = Provisioner(name, boot=server['boot'][0])
+            if 'script' in server['boot'].keys():
+                server['provisioner'] = Provisioner(name, boot=server['boot']['script'])
             else:
                 server['provisioner'] = Provisioner(name)
 
