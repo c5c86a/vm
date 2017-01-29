@@ -1,53 +1,17 @@
 from __future__ import print_function
-import sys
-from lib.vultr import Server
-from lib.ssh2vm import SSH2VM
 
-from time import sleep
-import socket
-from errno import *
-from time import time as now
-import yaml
+import sys
 from os.path import basename
+
+import yaml
+
+from lib.ssh2vm import SSH2VM
+from lib.vultr import Server
 
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
-
-def wait_net_service(server, port, timeout=None):
-    """ Wait for network service to appear
-        @param timeout: in seconds
-        @return: True of False, if timeout is None may return only True or
-                 throw unhandled network exception
-    """
-    s = socket.socket()
-    # time module is needed to calc timeout shared between two exceptions
-    end = now() + timeout
-
-    while True:
-        eprint("trying to connect to %s at port %d" % (server, port))
-        try:
-            next_timeout = end - now()  # connect might not respect our timeout so we try again until reaching it
-            if next_timeout < 0:
-                return False
-            else:
-                s.settimeout(next_timeout)
-            s.connect((server, port))
-
-        except socket.timeout, err:
-            return False
-        except socket.error, err:
-            codes = [ETIMEDOUT, ECONNABORTED, ECONNREFUSED]
-            if err[0] not in codes:
-                assert False, err
-            else:
-                eprint("waiting 10 seconds for %s to open port %d" % (server, port))
-                sleep(10)
-        else:
-            
-            s.close()
-            return True
 
 class Provisioner:
     srv = None
@@ -85,39 +49,51 @@ def main():
         for server in servers_info:
             server['ip'] = server['provisioner'].srv.getip()
         # checks ports of each VM
-        for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
-            if 'boot' in server.keys() and 'ports' in server['boot'].keys():
-                for port in server['boot']['ports']:
-                    ip = server['ip']
-                    assert wait_net_service(ip, int(port), 560), "Expected port %d of %s to be up" % (port, ip)
+        check_ports_at(servers_info, 'boot')
         # sets env var of each VM if any, uploads script and runs it
-        for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
-            if 'start' in server.keys():
-                if 'dependencies' in server.keys():
-                    for dependency in server['dependencies']:
-                        name = server['dependencies'][dependency]
-                        for other_server in servers_info:
-                            if other_server['name'] == name:
-                                server['dependencies'][dependency] = other_server['ip']
-                if 'script' in server['start'].keys():
-                    ssh = SSH2VM(server['ip'])
-                    ssh.upload(server['start']['script'])
-                    filename = basename(server['start']['script'])
-                    if 'dependencies' in server.keys():
-                        ssh.execute("bash %s" % filename, server['dependencies'])
-                    else:
-                        ssh.execute("bash %s" % filename)
+        start(servers_info)
         # checks ports of each VM
-        for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
-            if 'start' in server.keys() and 'ports' in server['start'].keys():
-                for port in server['start']['ports']:
-                    ip = server['ip']
-                    assert wait_net_service(ip, int(port), 560), "Expected port %d of %s to be up" % (port, ip)
+        check_ports_at(servers_info, 'start')
     finally:
         if 'ci' in yml.keys() and yml['ci']:
             for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
                 if 'provisioner' in server.keys():
                     server['provisioner'].destroy()
+
+
+def check_ports_at(servers_info, section):
+    for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
+        if 'boot' in server.keys() and 'ports' in server['boot'].keys():
+            for port in server[section]['ports']:
+                ssh = SSH2VM(server['ip'])
+                assert ssh.wait_net_service(int(port), 560), "Expected port %d of %s to be up" % (port, ip)
+
+
+def start(servers_info):
+    """
+    For each server with a 'start' section
+    uploads script
+    sets each environment variable of 'dependencies' with the IP of a server
+    executes script
+    :param servers_info: updates ['start']['dependencies'].values()
+    :return:
+    """
+    for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
+        if 'start' in server.keys():
+            if 'dependencies' in server.keys():
+                for dependency in server['dependencies']:
+                    name = server['dependencies'][dependency]
+                    for other_server in servers_info:
+                        if other_server['name'] == name:
+                            server['dependencies'][dependency] = other_server['ip']
+            if 'script' in server['start'].keys():
+                ssh = SSH2VM(server['ip'])
+                ssh.upload(server['start']['script'])
+                filename = basename(server['start']['script'])
+                if 'dependencies' in server.keys():
+                    ssh.execute("bash %s" % filename, server['dependencies'])
+                else:
+                    ssh.execute("bash %s" % filename)
 
 
 if __name__ == "__main__":
