@@ -1,3 +1,6 @@
+from __future__ import print_function
+
+import sys
 import socket
 from errno import ETIMEDOUT, ECONNABORTED, ECONNREFUSED
 
@@ -14,7 +17,10 @@ from fabric.state import env
 
 import sys
 
-from provision import eprint
+
+def eprint(*args, **kwargs):
+    print(*args, file=sys.stderr, **kwargs)
+
 
 env.connection_attempts = 5
 
