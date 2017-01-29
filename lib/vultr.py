@@ -67,6 +67,7 @@ class Script:
             'script': script
         }
         response = v.vultr_post('/startupscript/create', data)
+        assert 'SCRIPTID' in response.keys(), response
         self.scriptid = response['SCRIPTID']
         return self.scriptid
 
@@ -130,7 +131,7 @@ class Server:
     def destroy(self):
         while True:
             if Delorean() - self.startuptime < timedelta(minutes=5):
-	        sleep(10)
+                sleep(10)
             else:
                 v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
