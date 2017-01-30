@@ -67,8 +67,11 @@ class Script:
             'script': script
         }
         response = v.vultr_post('/startupscript/create', data)
-        assert response!=None, filename
-        self.scriptid = response['SCRIPTID']
+        try:
+            self.scriptid = response['SCRIPTID']
+        except:
+            eprint(filename)
+            assert False, response
         return self.scriptid
 
     def destroy(self):
