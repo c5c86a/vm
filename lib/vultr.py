@@ -67,7 +67,8 @@ class Script:
             'script': script
         }
         response = v.vultr_post('/startupscript/create', data)
-        assert 'Unable to create script: Invalid script' not in response.text, script
+        if response.status_code==412 and 'Unable to create script: Invalid script' in response.text:
+            assert False, script
         self.scriptid = response['SCRIPTID']
         return self.scriptid
 
