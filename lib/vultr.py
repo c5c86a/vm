@@ -71,7 +71,7 @@ class Script:
             self.scriptid = response['SCRIPTID']
         except:
             eprint(filename)
-            assert False, response
+            assert False, response.text
         return self.scriptid
 
     def destroy(self):
