@@ -4,14 +4,16 @@ servers:
     boot:
         script: deploy/boot_db.sh
         logs:
-        - 'full path to a log file'
+        - /tmp/firstboot.log
+        - SimpleHTTPServer.log
         ports:
         - 9042
   - name: app1
     start:
         script: deploy/start_ss7cli.sh
         logs:
-        - 'full path to a log file'
+        - /tmp/firstboot.log
+        - SimpleHTTPServer.log
         ports:
         - 8080
         dependencies:
