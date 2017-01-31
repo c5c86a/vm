@@ -70,7 +70,7 @@ class Script:
                 assert False, script
             else:
                 eprint(response.text)
-        for startupscript in response:
+        for startupscript in response.values():
             eprint(startupscript)
             if startupscript['name'] == name:
                 self.scriptid = startupscript['SCRIPTID']
