@@ -46,10 +46,10 @@ class VultrAPI():
         response = get(self.url + endpoint, params=data)
         try:
             json_object = response.json()
-        except ValueError, e:
-            result = response
+        except:
+            assert False, "HTTP status code %d and response text %s" % (response.status_code, response.text)
         else:
-            result = response.json()
+            result = json_object
         return result
 
 
@@ -65,13 +65,6 @@ class Script:
             script += open(filename).read()
         name = hashlib.md5(script).digest().encode("base64")
         response = v.vultr_get('/startupscript/list', {})
-        if hasattr(response, 'text'):
-            if 'Unable to create script: Invalid script' in response.text:
-                assert False, script
-            else:
-                eprint(response.text)
-        else:
-            eprint(response.json())
         for startupscript in response.values():
             eprint(startupscript)
             if startupscript['name'] == name:
@@ -83,11 +76,6 @@ class Script:
                 'script': script
             }
             response = v.vultr_post('/startupscript/create', data)
-            if hasattr(response, 'text'):
-                if 'Unable to create script: Invalid script' in response.text:
-                    assert False, script
-                else:
-                    eprint(response.text)
             self.scriptid = response['SCRIPTID']
         return self.scriptid
 
