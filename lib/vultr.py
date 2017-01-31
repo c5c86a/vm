@@ -9,6 +9,7 @@ from os import environ
 
 from datetime import timedelta
 from delorean import Delorean
+import hashlib
 
 
 def eprint(*args, **kwargs):
@@ -62,17 +63,29 @@ class Script:
         script = open('deploy/install_docker.sh').read()
         if filename!=None:
             script += open(filename).read()
-        data = {
-            'name':filename,
-            'script': script
-        }
-        response = v.vultr_post('/startupscript/create', data)
+        name = hashlib.md5(script).digest().encode("base64")
+        response = v.vultr_get('/startupscript/list', {})
         if hasattr(response, 'text'):
             if 'Unable to create script: Invalid script' in response.text:
                 assert False, script
             else:
                 eprint(response.text)
-        self.scriptid = response['SCRIPTID']
+        found = False
+        for key, startupscript in response.json():
+            if startupscript['name'] == name:
+                self.scriptid = startupscript['SCRIPTID']
+        if self.scriptid!=None:
+            data = {
+                'name': name,
+                'script': script
+            }
+            response = v.vultr_post('/startupscript/create', data)
+            if hasattr(response, 'text'):
+                if 'Unable to create script: Invalid script' in response.text:
+                    assert False, script
+                else:
+                    eprint(response.text)
+            self.scriptid = response['SCRIPTID']
         return self.scriptid
 
     def destroy(self):
