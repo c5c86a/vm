@@ -70,11 +70,11 @@ class Script:
                 assert False, script
             else:
                 eprint(response.text)
-        found = False
         for startupscript in response:
             if startupscript['name'] == name:
                 self.scriptid = startupscript['SCRIPTID']
-        if self.scriptid!=None:
+                break
+        if self.scriptid==None:
             data = {
                 'name': name,
                 'script': script

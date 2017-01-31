@@ -65,7 +65,7 @@ def check_ports_at(servers_info, section):
         if 'boot' in server.keys() and 'ports' in server['boot'].keys():
             for port in server[section]['ports']:
                 ssh = SSH2VM(server['ip'])
-                assert ssh.wait_net_service(int(port), 560), "Expected port %d of %s to be up" % (port, ip)
+                assert ssh.wait_net_service(int(port), 560), "Expected port %d of %s to be up" % (port, server['ip'])
 
 
 def start(servers_info):
