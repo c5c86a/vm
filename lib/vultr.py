@@ -71,7 +71,7 @@ class Script:
             else:
                 eprint(response.text)
         found = False
-        for key, startupscript in response.json():
+        for startupscript in response:
             if startupscript['name'] == name:
                 self.scriptid = startupscript['SCRIPTID']
         if self.scriptid!=None:
