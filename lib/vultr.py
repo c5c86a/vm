@@ -65,7 +65,11 @@ class Script:
             script += open(filename).read()
         name = hashlib.md5(script).digest().encode("base64")
         response = v.vultr_get('/startupscript/list', {})
-        for startupscript in response.values():
+        if isinstance(response, list):
+            scripts = response
+        else:
+            scripts = response.values()
+        for startupscript in scripts:
             eprint(startupscript)
             if startupscript['name'] == name:
                 self.scriptid = startupscript['SCRIPTID']
