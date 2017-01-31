@@ -70,6 +70,8 @@ class Script:
                 assert False, script
             else:
                 eprint(response.text)
+        else:
+            eprint(response.json())
         for startupscript in response.values():
             eprint(startupscript)
             if startupscript['name'] == name:
