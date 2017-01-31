@@ -2,6 +2,8 @@
 
 set -e
 
+echo "boot db"
+
 export DEBIAN_FRONTEND=noninteractive
 
 ports(){

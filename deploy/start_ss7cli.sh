@@ -2,6 +2,8 @@
 
 set -e
 
+echo "start ss7cli"
+
 ports(){
   ufw default deny incoming
   ufw default allow outgoing

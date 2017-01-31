@@ -2,6 +2,8 @@
 
 set -e
 
+echo "install docker"
+
 export DEBIAN_FRONTEND=noninteractive
 
 fix_vultr(){
