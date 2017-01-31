@@ -89,7 +89,7 @@ def start(servers_info):
                 ssh = SSH2VM(server['ip'])
                 ssh.upload(server['start']['script'])
                 filename = basename(server['start']['script'])
-                if 'dependencies' in server.keys():
+                if 'dependencies' in server['start'].keys():
                     ssh.execute("bash %s" % filename, server['dependencies'])
                 else:
                     ssh.execute("bash %s" % filename)
