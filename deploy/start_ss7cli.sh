@@ -24,6 +24,8 @@ run(){
   python -m SimpleHTTPServer 3435
 }
 
+echo "CASSANDRA_IP: '$CASSANDRA_IP'"
+
 curl -X GET http://$CASSANDRA_IP:9042
 ports
 run
