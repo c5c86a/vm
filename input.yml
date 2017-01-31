@@ -15,4 +15,4 @@ servers:
         ports:
         - 8080
         dependencies:
-            CASSANDRA_IP: db
+            CASSANDRA_IP: db1

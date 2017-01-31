@@ -70,7 +70,6 @@ class Script:
         else:
             scripts = response.values()
         for startupscript in scripts:
-            eprint(startupscript)
             if startupscript['name'] == name:
                 self.scriptid = startupscript['SCRIPTID']
                 break
