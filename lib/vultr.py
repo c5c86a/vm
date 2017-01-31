@@ -67,8 +67,11 @@ class Script:
             'script': script
         }
         response = v.vultr_post('/startupscript/create', data)
-        if hasattr(response, 'text') and 'Unable to create script: Invalid script' in response.text:
-            assert False, script
+        if hasattr(response, 'text'):
+            if 'Unable to create script: Invalid script' in response.text:
+                assert False, script
+            else:
+                eprint(response.text)
         self.scriptid = response['SCRIPTID']
         return self.scriptid
 
@@ -78,6 +81,7 @@ class Script:
             'SCRIPTID': self.scriptid
         }
         response = v.vultr_post('/startupscript/destroy', data)
+        x = 1
 
 
 class Server:
