@@ -31,7 +31,7 @@ deploy(){
 }
 
 run(){
-  python -m SimpleHTTPServer 9042 >> SimpleHTTPServer.log 2>&1
+  python -m SimpleHTTPServer 9042 >> /tmp/SimpleHTTPServer.log 2>&1
 }
 
 ports
