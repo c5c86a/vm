@@ -88,12 +88,12 @@ def start(servers_info):
     """
     for server in servers_info:
         if 'start' in server.keys():
-            if 'dependencies' in server.keys():
-                for dependency in server['dependencies']:
-                    name = server['dependencies'][dependency]
+            if 'dependencies' in server['start'].keys():
+                for dependency in server['start']['dependencies']:
+                    name = server['start']['dependencies'][dependency]
                     for other_server in servers_info:
                         if other_server['name'] == name:
-                            server['dependencies'][dependency] = other_server['ip']
+                            server['start']['dependencies'][dependency] = other_server['ip']
                             eprint(server)
                             break
             if 'script' in server['start'].keys():
