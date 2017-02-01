@@ -86,7 +86,7 @@ def start(servers_info):
     :param servers_info: updates ['start']['dependencies'].values()
     :return:
     """
-    for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
+    for server in servers_info:
         if 'start' in server.keys():
             if 'dependencies' in server.keys():
                 for dependency in server['dependencies']:
@@ -94,6 +94,8 @@ def start(servers_info):
                     for other_server in servers_info:
                         if other_server['name'] == name:
                             server['dependencies'][dependency] = other_server['ip']
+                            eprint(server)
+                            break
             if 'script' in server['start'].keys():
                 ssh = SSH2VM(server['ip'])
                 ssh.upload(server['start']['script'])
