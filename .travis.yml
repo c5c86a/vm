@@ -13,4 +13,4 @@ install:
 - behave features/mandatory.feature
 
 script:
-- python provision.py
+- python provision.py input.yml
