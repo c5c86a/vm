@@ -15,6 +15,6 @@ servers:
         - /tmp/firstboot.log
         - /tmp/SimpleHTTPServer.log
         ports:
-        - 8080
+        - 3435
         dependencies:
             CASSANDRA_IP: db1

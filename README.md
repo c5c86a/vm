@@ -17,6 +17,8 @@ We assume that you know enough bash and python to adapt this library to your nee
 Before adding any feature like networks and backup, you should keep in mind that the goal is to keep this library to a minimum without making yet another orchestration platform.
 If your needs become bigger, you should use an orchestration platform and by that time you will know which scripts belong to the developer and which scripts belong to the devop.
 
+However, contributions on testing, logging and error handling are more than welcome.
+
 #### Features
 
 1. Create VMs at vultr in parallel
@@ -33,8 +35,8 @@ If your needs become bigger, you should use an orchestration platform and by tha
 
 For each argument x that you put at class Provisioner, you can put the following files at folder deploy.
 
-1. boot_x.sh runs on boot
-2. start_x.sh is uploaded after startup_x.sh is ready and then it is executed
+1. boot script runs on boot
+2. start script is uploaded after boot port is up and then it is executed
 
 The file input.yml has the following format:
 
@@ -42,13 +44,15 @@ The file input.yml has the following format:
 servers:
   - name: server
     boot:                             (optional)
-        logs:                         (optional, if they are given, their content is shown in case of error)
-        - 'full path to a log file'
-        ports: 8080                   (waits until these ports are up. mandatory if there is a boot_x.sh)
+        script:                       (mandatory)
+        logs:                         (optional, their content is shown in case of error)
+        - 
+        ports: 8080                   (optional, waits until these ports are up)
     start:                            (optional)
-        logs:                         (optional, if they are given, their content is shown in case of error)
-        - 'full path to a log file'
-        ports: 8080                   (waits until these ports are up. mandatory if there is a start_x.sh)
+        script:                       (mandatory)
+        logs:                         (optional, their content is shown in case of error)
+        - 
+        ports: 8080                   (optional, waits until these ports are up)
         dependencies:                 (optional)
             db: server                (sets env var db with value the IP of the server with name 'server')
     ci: true                          (optional, if true, it destroys VMs in the end, default is false)

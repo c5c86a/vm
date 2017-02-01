@@ -2,8 +2,6 @@
 
 set -e
 
-echo "start ss7cli"
-
 ports(){
   ufw default deny incoming
   ufw default allow outgoing
@@ -24,9 +22,11 @@ run(){
   python -m SimpleHTTPServer 3435 >> /tmp/SimpleHTTPServer.log 2>&1
 }
 
-echo "CASSANDRA_IP: '$CASSANDRA_IP'"
+echo "curl -X GET http://$CASSANDRA_IP:9042"
 
 curl -X GET http://$CASSANDRA_IP:9042
+
+echo "start ss7cli"
 ports
 run
 

@@ -55,10 +55,8 @@ class VultrAPI():
 
 class Script:
     scriptid = None
+
     def create(self, filename):
-        """
-        LE' https://api.vultr.com/v1/startupscript/create --data 'name=my first script' --data 'script=#!/bin/bash\necho hello world > /root/hello'
-        """
         v = VultrAPI('token')
         script = open('deploy/install_docker.sh').read()
         if filename!=None:
@@ -88,7 +86,6 @@ class Script:
             'SCRIPTID': self.scriptid
         }
         response = v.vultr_post('/startupscript/destroy', data)
-        x = 1
 
 
 class Server:
@@ -147,7 +144,6 @@ class Server:
             else:
                 v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
-                #assert response.status_code == 200, "Failed to destroy server with subid %s" % self.subid
                 self.script.destroy()
                 break
 
