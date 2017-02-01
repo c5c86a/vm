@@ -1,4 +1,5 @@
-fabric==1.10.2
+# fixes import issues with paramiko
+fabric==1.13.1
 delorean==0.6.0
 requests[security]==2.3.0
 PyYAML==3.10
