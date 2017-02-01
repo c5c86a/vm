@@ -94,6 +94,9 @@ class Server:
     startuptime = None
     script = Script()
 
+    def __init__(self, mock):
+        self.mock = mock
+
     def create(self, label, plan, datacenter, boot):
         """
         Creates a new vm at vultr. Usually it takes 2 minutes.
@@ -139,12 +142,12 @@ class Server:
 
     def destroy(self):
         while True:
-            if Delorean() - self.startuptime < timedelta(minutes=5):
-                sleep(10)
-            else:
+            if self.mock or not(Delorean() - self.startuptime < timedelta(minutes=5)):
                 v = VultrAPI('token')
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
                 self.script.destroy()
                 break
+            else:
+                sleep(10)
 
 

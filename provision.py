@@ -5,9 +5,8 @@ from os.path import basename
 
 import yaml
 
-from lib.ssh2vm import SSH2VM
 from lib.vultr import Server
-
+import lib
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -19,21 +18,21 @@ class Provisioner:
     label = None
     ip = None
 
-    def __init__(self, label, plan=29, datacenter=9, boot=None):
+    def __init__(self, mock, label, plan=29, datacenter=9, boot=None):
         """
         plan 29 is 768 MB RAM,15 GB SSD,1.00 TB BW and can be found at https://api.vultr.com/v1/plans/list 90 is 3GB at dc 1
         data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
-        self.srv = Server()
+        self.srv = Server(mock)
         self.srv.create(label, plan, datacenter, boot)
 
     def destroy(self):
         self.srv.destroy()
 
 
-def main():
-    yml = yaml.load(open('input.yml').read())
+def main(filename, mock=False):
+    yml = yaml.load(open(filename).read())
     assert 'servers' in yml.keys(), yml
     servers_info = yml['servers']
     try:
@@ -41,9 +40,9 @@ def main():
         for server in servers_info:
             name = server['name']
             if 'boot' in server.keys() and 'script' in server['boot'].keys():
-                server['provisioner'] = Provisioner(name, boot=server['boot']['script'])
+                server['provisioner'] = Provisioner(mock, name, boot=server['boot']['script'])
             else:
-                server['provisioner'] = Provisioner(name)
+                server['provisioner'] = Provisioner(mock, name)
 
         for server in servers_info:
             server['ip'] = server['provisioner'].srv.getip()
@@ -57,7 +56,7 @@ def main():
         try:
             for server in servers_info:
                 if 'ip' in server.keys():
-                    ssh = SSH2VM(server['ip'])
+                    ssh = lib.ssh2vm.SSH2VM(server['ip'])
                     for mode in ['boot', 'start']:
                         if mode in server.keys():
                             for log in server[mode]['logs']:
@@ -71,9 +70,9 @@ def main():
 
 def check_ports_at(servers_info, section):
     for server in servers_info:  # wait 10 minutes (until travis is about to kill the job) and then fail
-        if 'boot' in server.keys() and 'ports' in server['boot'].keys():
+        if section in server.keys() and 'ports' in server[section].keys():
             for port in server[section]['ports']:
-                ssh = SSH2VM(server['ip'])
+                ssh = lib.ssh2vm.SSH2VM(server['ip'])
                 assert ssh.wait_net_service(int(port), 560), "Expected port %d of %s to be up" % (port, server['ip'])
 
 
@@ -97,7 +96,7 @@ def start(servers_info):
                             eprint(server)
                             break
             if 'script' in server['start'].keys():
-                ssh = SSH2VM(server['ip'])
+                ssh = lib.ssh2vm.SSH2VM(server['ip'])
                 ssh.upload(server['start']['script'])
                 filename = basename(server['start']['script'])
                 if 'dependencies' in server['start'].keys():
@@ -107,4 +106,5 @@ def start(servers_info):
 
 
 if __name__ == "__main__":
-    main()
+    assert len(sys.argv) > 0, "Expected exactly one argument with the input filename"
+    main(sys.argv[1])
