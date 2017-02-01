@@ -5,8 +5,9 @@ from os.path import basename
 
 import yaml
 
-from lib.vultr import Server
 import lib
+from lib.vultr import Server
+from lib.ssh2vm import SSH2VM
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -24,7 +25,7 @@ class Provisioner:
         data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
-        self.srv = Server(mock)
+        self.srv = lib.vultr.Server(mock)
         self.srv.create(label, plan, datacenter, boot)
 
     def destroy(self):
