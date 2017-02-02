@@ -14,7 +14,7 @@ Whether you use docker or not, in this case you don't need Kubernetes, Mesospher
 
 We assume that you know enough bash and python to adapt this library to your needs.
 
-Before adding any feature like networks and backup, you should keep in mind that the goal is to keep this library to a minimum without making yet another orchestration platform.
+Before adding any feature like networks, backup or coding in Go, you should keep in mind that the goal is to keep this library to a minimum without making yet another orchestration platform.
 If your needs become bigger, you should use an orchestration platform and by that time you will know which scripts belong to the developer and which scripts belong to the devop.
 
 However, contributions on testing, logging and error handling are more than welcome.
