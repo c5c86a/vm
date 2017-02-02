@@ -86,4 +86,7 @@ class SSH2VM:
                 return True
 
     def exists(fullpath, use_sudo=True):
-        return exists('/path/to/remote/file', use_sudo=use_sudo)
+        result = False
+        with settings(host_string='root@'+self.ip, key_filename='key'):
+            result = exists('/path/to/remote/file', use_sudo=use_sudo)
+        return result
