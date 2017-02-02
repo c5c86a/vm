@@ -19,7 +19,7 @@ ports(){
 }
 
 run(){
-  python -m SimpleHTTPServer 3435 >> /tmp/SimpleHTTPServer.log 2>&1
+  python -m SimpleHTTPServer 3435 >> /tmp/SimpleHTTPServer.log 2>&1 &
 }
 
 echo "curl -X GET http://$CASSANDRA_IP:9042"
