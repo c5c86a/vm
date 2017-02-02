@@ -14,6 +14,7 @@ from subprocess import Popen, PIPE
 from fabric.operations import run, put
 from fabric.context_managers import settings, shell_env
 from fabric.state import env
+from fabric.contrib.files import exists
 
 import sys
 
@@ -83,3 +84,6 @@ class SSH2VM:
 
                 s.close()
                 return True
+
+    def exists(fullpath, use_sudo=True):
+        return exists('/path/to/remote/file', use_sudo=use_sudo)
