@@ -104,7 +104,7 @@ def start(servers_info):
                 if 'dependencies' in server['start'].keys():
                     ssh.execute("bash %s" % filename, server['start']['dependencies'])
                 else:
-                    ssh.execute("bash %s" % filename)
+                    ssh.execute("bash %s" % filename, {})
 
 
 if __name__ == "__main__":
