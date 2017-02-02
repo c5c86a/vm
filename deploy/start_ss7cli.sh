@@ -25,7 +25,7 @@ After=network.target ss7.socket
 Requires=ss7.socket
 
 [Service]
-ExecStart=python -m SimpleHTTPServer 3435
+ExecStart=/usr/bin/python -m SimpleHTTPServer 3435
 
 [Install]
 WantedBy=multi-user.target
