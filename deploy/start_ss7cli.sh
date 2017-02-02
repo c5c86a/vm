@@ -19,7 +19,11 @@ ports(){
 }
 
 run(){
-  python -m SimpleHTTPServer 3435 >> /tmp/SimpleHTTPServer.log 2>&1 
+  sudo apt-get install -y supervisor
+  echo "[program:ss7]" >> /etc/supervisor/conf.d/ss7.conf
+  echo "command=python -m SimpleHTTPServer 3435" >> /etc/supervisor/conf.d/ss7.conf
+  echo "autorestart=true" >> /etc/supervisor/conf.d/ss7.conf
+  supervisord -c /etc/supervisor/conf.d/ss7.conf
 }
 
 echo "curl -X GET http://$CASSANDRA_IP:9042"

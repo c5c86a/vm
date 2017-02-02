@@ -44,17 +44,6 @@ class SSH2VM:
             with settings(shell_env(**env_vars_dict), host_string='root@' + self.ip, key_filename='key'):
                 run(command, stdout=sys.stdout, stderr=sys.stderr)
 
-    def daemon(self, command, env_vars_dict=None):
-        """
-        The current timeout for a job on travis-ci.org is 50 minutes (and at least one line printed to stdout/stderr per 10 minutes)
-        """
-        if env_vars_dict==None:
-            with settings(host_string='root@'+self.ip, key_filename='key'):
-                run("nohup %s >& /dev/null < /dev/null &" % command, pty=False, stdout=sys.stdout, stderr=sys.stderr) # http://docs.fabfile.org/en/1.5/faq.html
-        else:
-            with settings(shell_env(**env_vars_dict), host_string='root@'+self.ip, key_filename='key'):
-                run("nohup %s >& /dev/null < /dev/null &" % command, pty=False, stdout=sys.stdout, stderr=sys.stderr) # http://docs.fabfile.org/en/1.5/faq.html
-
     def wait_net_service(self, port, timeout=None):
         """ Wait for network service to appear
             @param timeout: in seconds

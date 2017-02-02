@@ -102,9 +102,9 @@ def start(servers_info):
                 ssh.upload(server['start']['script'])
                 filename = basename(server['start']['script'])
                 if 'dependencies' in server['start'].keys():
-                    ssh.daemon("bash %s" % filename, server['start']['dependencies'])
+                    ssh.execute("bash %s" % filename, server['start']['dependencies'])
                 else:
-                    ssh.daemon("bash %s" % filename)
+                    ssh.execute("bash %s" % filename)
 
 
 if __name__ == "__main__":
