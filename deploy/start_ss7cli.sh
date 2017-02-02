@@ -17,6 +17,7 @@ ports(){
 }
 
 run(){
+  mkdir -p /usr/lib/systemd/system
   cat <<EOT >> /usr/lib/systemd/system/ss7.service
 [Unit]
 Description=ss7
