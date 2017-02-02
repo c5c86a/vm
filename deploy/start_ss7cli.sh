@@ -20,14 +20,14 @@ ports(){
 run(){
   sudo apt-get install -y supervisor
   echo "[program:ss7]" >> /etc/supervisor/conf.d/ss7.conf
-  echo "command=python -m SimpleHTTPServer 3435" >> /etc/supervisor/conf.d/ss7.conf
+  echo "command=python -m SimpleHTTPServer 3435 2> /var/log/supervisord/simplehttpserver.err.log 1> /var/log/supervisord/simplehttpserver.out.log" >> /etc/supervisor/conf.d/ss7.conf
   echo "autorestart=true" >> /etc/supervisor/conf.d/ss7.conf
-  echo "directory=/srv" >> /etc/supervisor/conf.d/ss7.conf
+  echo "directory=/" >> /etc/supervisor/conf.d/ss7.conf
   echo "autostart=true" >> /etc/supervisor/conf.d/ss7.conf
   echo "autorestart=true" >> /etc/supervisor/conf.d/ss7.conf
   echo "startretries=3" >> /etc/supervisor/conf.d/ss7.conf
-  echo "stderr_logfile=/var/log/webhook/nodehook.err.log" >> /etc/supervisor/conf.d/ss7.conf
-  echo "stdout_logfile=/var/log/webhook/nodehook.out.log" >> /etc/supervisor/conf.d/ss7.conf
+  echo "stderr_logfile=/var/log/supervisord/simplehttpserver.err.log" >> /etc/supervisor/conf.d/ss7.conf
+  echo "stdout_logfile=/var/log/supervisord/simplehttpserver.out.log" >> /etc/supervisor/conf.d/ss7.conf
   echo "user=www-data" >> /etc/supervisor/conf.d/ss7.conf
   echo "environment=CASSANDRA_IP='$CASSANDRA_IP'" >> /etc/supervisor/conf.d/ss7.conf
   echo "[inet_http_server]" >> /etc/supervisor/conf.d/ss7.conf
