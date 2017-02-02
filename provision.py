@@ -61,7 +61,7 @@ def main(filename, mock=False):
                     for mode in ['boot', 'start']:
                         if mode in server.keys():
                             for log in server[mode]['logs']:
-                                ssh.execute("cat %s" % log)
+                                ssh.execute("cat %s 2>/dev/null" % log)
         finally:
             if 'ci' in yml.keys() and yml['ci']:
                 for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
