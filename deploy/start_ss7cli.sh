@@ -25,7 +25,7 @@ Description=ss7
 [Service]
 ExecStart=python -m SimpleHTTPServer 3435
 EOT
-
+  systemctl daemon-reload
   systemctl enable ss7
   systemctl start ss7
   systemctl status ss7
