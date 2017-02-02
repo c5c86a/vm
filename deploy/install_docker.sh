@@ -16,7 +16,7 @@ fix_vultr(){
   rm /var/cache/apt/archives/lock
   rm /var/lib/dpkg/lock
   dpkg --configure -a
-  apt-get update
+#  apt-get update
 }
 
 install_docker(){
