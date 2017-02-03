@@ -95,7 +95,6 @@ def start(servers_info):
                     for other_server in servers_info:
                         if other_server['name'] == name:
                             server['start']['dependencies'][dependency] = other_server['ip']
-                            eprint(server)
                             break
             if 'script' in server['start'].keys():
                 ssh = lib.ssh2vm.SSH2VM(server['ip'])
