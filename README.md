@@ -33,27 +33,9 @@ However, contributions on testing, logging and error handling are more than welc
 
 #### Input
 
-For each argument x that you put at class Provisioner, you can put the following files at folder deploy.
+The file input.yml should define one or more servers. Each server should have a boot script or a start script or both.
 
-1. boot script runs on boot
-2. start script is uploaded after boot port is up and then it is executed
+1. A boot script runs on boot. Services if any can start with a bash command
+2. A start script is uploaded after boot port is up and then it is executed. Services if any should start with a tool like systemd
 
-The file input.yml has the following format:
-
-```
-servers:
-  - name: server
-    boot:                             (optional)
-        script:                       (mandatory)
-        logs:                         (optional, their content is shown in case of error)
-        - 
-        ports: 8080                   (optional, waits until these ports are up)
-    start:                            (optional)
-        script:                       (mandatory)
-        logs:                         (optional, their content is shown in case of error)
-        - 
-        ports: 8080                   (optional, waits until these ports are up)
-        dependencies:                 (optional)
-            db: server                (sets env var db with value the IP of the server with name 'server')
-    ci: true                          (optional, if true, it destroys VMs in the end, default is false)
-```
+Examples of scripts can be found at the folder deploy. Note that the script install_docker.sh starts before all and installs the docker engine.
