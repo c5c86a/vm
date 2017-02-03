@@ -18,7 +18,7 @@ run(){
 Description=ss7
 [Service]
 Type=simple
-ExecStart=/usr/bin/python -m SimpleHTTPServer 3435
+ExecStart=/usr/bin/python -m SimpleHTTPServer 3435 &
 [Install]
 WantedBy=multi-user.target
 EOT
