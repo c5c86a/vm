@@ -21,27 +21,14 @@ run(){
   cat <<EOT >> /usr/lib/systemd/system/ss7.service
 [Unit]
 Description=ss7
-After=network.target ss7.socket
-Requires=ss7.socket
-
 [Service]
+Type=simple
 ExecStart=/usr/bin/python -m SimpleHTTPServer 3435
-
 [Install]
 WantedBy=multi-user.target
 EOT
-  cat <<EOT >> /usr/lib/systemd/system/ss7.socket
-[Unit]
-Description=SS7
-PartOf=ss7.service
 
-[Socket]
-ListenStream=0.0.0.0:3435
-
-[Install]
-WantedBy=sockets.target
-EOT
-systemctl daemon-reload
+  systemctl daemon-reload
   systemctl enable ss7
   systemctl start ss7
   systemctl status ss7
