@@ -17,7 +17,7 @@ run(){
 [Unit]
 Description=ss7
 [Service]
-Type=simple
+Type=forking
 ExecStart=/usr/bin/python -m SimpleHTTPServer 3435
 [Install]
 WantedBy=multi-user.target
