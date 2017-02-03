@@ -23,7 +23,7 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-env.timeout = 560
+env.timeout = 360
 env.connection_attempts = 5
 
 class SSH2VM:
