@@ -23,7 +23,6 @@ def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
 
 
-env.timeout = 360
 env.connection_attempts = 5
 
 class SSH2VM:
@@ -40,10 +39,10 @@ class SSH2VM:
         """
         if env_vars_dict==None:
             with settings(host_string='root@'+self.ip, key_filename='key'):
-                run(command, stdout=sys.stdout, stderr=sys.stderr)
+                run(command, stdout=sys.stdout, stderr=sys.stderr, pty=False, timeout=360)
         else:
             with settings(shell_env(**env_vars_dict), host_string='root@' + self.ip, key_filename='key'):
-                run(command, stdout=sys.stdout, stderr=sys.stderr)
+                run(command, stdout=sys.stdout, stderr=sys.stderr, pty=False, timeout=360)
 
     def wait_net_service(self, port, timeout=None):
         """ Wait for network service to appear
