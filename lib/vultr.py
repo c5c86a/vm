@@ -143,12 +143,14 @@ class Server:
     def destroy(self):
         while True:
             if self.mock or not (Delorean() - self.startuptime < timedelta(minutes=5)):
+                eprint(self.ip)
                 eprint("1...")
                 v = VultrAPI('token')
                 eprint("2...")
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
                 eprint("3...")
                 self.script.destroy()
+                eprint("4...")
                 break
             else:
                 eprint("Waiting 5 minutes for vultr to allow destroying a fresh vm...")
