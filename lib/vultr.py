@@ -9,6 +9,7 @@ from os import environ
 
 from datetime import timedelta
 from delorean import Delorean
+import hashlib
 
 
 def eprint(*args, **kwargs):
@@ -45,10 +46,10 @@ class VultrAPI():
         response = get(self.url + endpoint, params=data)
         try:
             json_object = response.json()
-        except ValueError, e:
-            result = response
+        except:
+            assert False, "HTTP status code %d and response text %s" % (response.status_code, response.text)
         else:
-            result = response.json()
+            result = json_object
         return result
 
 
@@ -57,14 +58,27 @@ class Script:
 
     def create(self, filename):
         v = VultrAPI('token')
-        data = {
-            'name':filename,        
-            'script': open(filename).read()
-        }
-        response = v.vultr_post('/startupscript/create', data)
-        self.scriptid = response['SCRIPTID']
+        script = open('deploy/install_docker.sh').read()
+        if filename!=None:
+            script += open(filename).read()
+        name = hashlib.md5(script).digest().encode("base64")
+        response = v.vultr_get('/startupscript/list', {})
+        if isinstance(response, list):
+            scripts = response
+        else:
+            scripts = response.values()
+        for startupscript in scripts:
+            if startupscript['name'] == name:
+                self.scriptid = startupscript['SCRIPTID']
+                break
+        if self.scriptid==None:
+            data = {
+                'name': name,
+                'script': script
+            }
+            response = v.vultr_post('/startupscript/create', data)
+            self.scriptid = response['SCRIPTID']
         return self.scriptid
-
 
     def destroy(self):
         v = VultrAPI('token')
@@ -80,16 +94,25 @@ class Server:
     startuptime = None
     script = Script()
 
-    def create(self, label):
+    def __init__(self, mock):
+        self.mock = mock
+
+    def create(self, label, plan, datacenter, boot):
+        """
+        Creates a new vm at vultr. Usually it takes 2 minutes.
+        :param label:
+        :return: ip
+        """
+        self.label = label
         v = VultrAPI('token')
-        scriptid = self.script.create("deploy/%s.sh" % label)
+        scriptid = self.script.create(boot)
         data = {
-            'DCID':      9,             # data center at Frankfurt
-            'VPSPLANID': 29,       # 768 MB RAM,15 GB SSD,1.00 TB BW
+            'DCID':      datacenter,             # data center at Frankfurt
+            'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
             'SSHKEYID':  '5794ed3c1ce42',
-            'SCRIPTID':  scriptid
+            'SCRIPTID':  scriptid       # at digitalocean this is called user_data and the format of the value is cloud-config
         }
         if label.startswith('test'):
             data['notify_activate'] = 'no'
@@ -99,29 +122,38 @@ class Server:
 
     def getip(self):
         v = VultrAPI('token')
-        while True:
-            if Delorean() - self.startuptime < timedelta(minutes=10):
-                srv = v.vultr_get('/server/list', {'SUBID': self.subid})
-                if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
-                    eprint("Waiting for ssh to become available and dpkg to become unlocked so that we can apt-get install")
+        try:
+            while True:
+                if Delorean() - self.startuptime < timedelta(minutes=10):
+                    srv = v.vultr_get('/server/list', {'SUBID': self.subid})
+                    if srv['power_status'] == 'running' and srv['main_ip'] != '0' and srv['default_password'] != '':
+                        self.ip = srv['main_ip']
+                        break
+                    eprint("Waiting for vultr to create " + self.label)
                     sleep(10)
-                    self.ip = srv['main_ip']
-                    break
-                eprint("Waiting for vultr to create server")
-                sleep(10)
-            else:
-                assert False, 'Failed to get status of new server within 5 minutes'
+                else:
+                    assert False, "Failed to get status of new %s within 5 minutes" % self.label
+        except:
+            self.destroy()
+            raise
+        if self.ip==None:
+            raise
         return self.ip
 
     def destroy(self):
         while True:
-            if Delorean() - self.startuptime < timedelta(minutes=5):
-	        sleep(10)
-            else:
+            if self.mock or not (Delorean() - self.startuptime < timedelta(minutes=5)):
+                eprint(self.ip)
+                eprint("1...")
                 v = VultrAPI('token')
+                eprint("2...")
                 response = v.vultr_post('/server/destroy', {'SUBID': self.subid})
-                #assert response.status_code == 200, "Failed to destroy server with subid %s" % self.subid
+                eprint("3...")
                 self.script.destroy()
+                eprint("4...")
                 break
+            else:
+                eprint("Waiting 5 minutes for vultr to allow destroying a fresh vm...")
+                sleep(10)
 
 
