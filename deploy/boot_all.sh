@@ -25,7 +25,7 @@ deploy(){
 }
 
 run(){
-  docker run --name db --net=host -p 127.0.0.1:9042:9042 -p 127.0.0.1:9160:9160 -d cassandra:2.0 >> /tmp/db.log 2>&1
+  docker run --name db --net=host -p 127.0.0.1:9042:9042 -p 127.0.0.1:9160:9160 -e "CASSANDRA_LISTEN_ADDRESS=127.0.0.1" -e "MAX_HEAP_SIZE=128M" -e "HEAP_NEWSIZE=24M" -d cassandra:2.0 >> /tmp/db.log 2>&1
   docker run --name smsc --net=host -p 127.0.0.1:8080:8080 -p 127.0.0.1:3435:3435 -d restcomm/smscgateway-docker >> /tmp/smsc.log 2>&1
 }
 
