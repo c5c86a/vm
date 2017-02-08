@@ -14,4 +14,4 @@ servers:
         logs:
         - /tmp/firstboot.log
         dependencies:
-          CASSANDRA_IP: cassandra
+          CASSANDRA_IP: multiple-vm-cassandra
