@@ -18,7 +18,7 @@ run(){
 Description=ss7
 [Service]
 Type=simple
-ExecStart=/usr/bin/docker run --name smsc -e CASSANDRA_IP="$CASSANDRA_IP" --net=host -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 -d nicosmaris/smscgateway-docker
+ExecStart=/usr/bin/docker run --name smsc -e SMSC_SERVER="simulator" -e CASSANDRA_IP="$CASSANDRA_IP" --net=host -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 -d nicosmaris/smscgateway-docker
 [Install]
 WantedBy=multi-user.target
 EOT
