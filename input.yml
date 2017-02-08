@@ -13,5 +13,6 @@ servers:
         script: deploy/start_ss7cli.sh
         logs:
         - /tmp/firstboot.log
+        - /var/lib/docker/containers/**/*-json.log
         dependencies:
           CASSANDRA_IP: multiple-vm-cassandra
