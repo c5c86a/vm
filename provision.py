@@ -41,7 +41,7 @@ def main(filename, mock=False):
         for server in servers_info:
             name = server['name']
             if 'boot' in server.keys() and 'script' in server['boot'].keys():
-                server['provisioner'] = Provisioner(mock, name, boot=server['boot']['script'])
+                server['provisioner'] = Provisioner(mock, name, 90, 1, boot=server['boot']['script'])
             else:
                 server['provisioner'] = Provisioner(mock, name, 90, 1)
 

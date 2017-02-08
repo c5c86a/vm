@@ -4,10 +4,8 @@ servers:
         script: deploy/boot_cassandra.sh
         logs:
         - /tmp/firstboot.log
-        - /tmp/cassandra.log
         ports:
         - 9042
-        - 9160
   - name: multiple-vm-smsc
     start:
         script: deploy/start_ss7cli.sh
