@@ -8,6 +8,8 @@ import yaml
 import lib
 from lib.vultr import Server
 from lib.ssh2vm import SSH2VM
+from time import sleep
+
 
 def eprint(*args, **kwargs):
     print(*args, file=sys.stderr, **kwargs)
@@ -64,6 +66,8 @@ def main(filename, mock=False):
                                 if ssh.exists(log):
                                     ssh.execute("cat %s" % log)
         finally:
+            eprint("\n\nReady...\n\n")
+            sleep(560)
             if 'ci' in yml.keys() and yml['ci']:
                 for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
                     if 'provisioner' in server.keys():

@@ -6,5 +6,3 @@ servers:
         - /tmp/firstboot.log
         - /tmp/db.log
         - /tmp/smsc.log
-        ports:
-        - 3435
