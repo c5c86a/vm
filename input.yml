@@ -9,7 +9,7 @@ servers:
         - 9042
         - 9160
   - name: multiple-vm-smsc
-    boot:
+    start:
         script: deploy/start_ss7cli.sh
         logs:
         - /tmp/firstboot.log

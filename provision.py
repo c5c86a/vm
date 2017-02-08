@@ -43,7 +43,7 @@ def main(filename, mock=False):
             if 'boot' in server.keys() and 'script' in server['boot'].keys():
                 server['provisioner'] = Provisioner(mock, name, boot=server['boot']['script'])
             else:
-                server['provisioner'] = Provisioner(mock, name)
+                server['provisioner'] = Provisioner(mock, name, 90, 1)
 
         for server in servers_info:
             server['ip'] = server['provisioner'].srv.getip()
