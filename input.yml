@@ -1,20 +1,21 @@
-ci: true
 servers:
-  - name: db1
+  - name: cassandra
     boot:
-        script: deploy/boot_db.sh
+        script: deploy/boot_cassandra.sh
         logs:
         - /tmp/firstboot.log
         - /tmp/SimpleHTTPServer.log
         ports:
         - 9042
-  - name: app1
-    start:
+        - 9160
+  - name: smsc
+    boot:
         script: deploy/start_ss7cli.sh
         logs:
         - /tmp/firstboot.log
         - /tmp/SimpleHTTPServer.log
         ports:
-        - 3435
+        - 9042
+        - 9160
         dependencies:
-            CASSANDRA_IP: db1
+          CASSANDRA_IP: cassandra

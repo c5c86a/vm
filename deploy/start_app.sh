@@ -13,15 +13,12 @@ ports(){
 
 run(){
   mkdir -p /usr/lib/systemd/system
-  echo -e "$CASSANDRA_IP" > /etc/container_environment/CASSANDRA_IP
-  echo -e "0.0.0.0" > /etc/container_environment/STATIC_ADDRESS
-  echo -e "simulator" > /etc/container_environment/SMSC_SERVER
   cat <<EOT >> /usr/lib/systemd/system/ss7.service
 [Unit]
 Description=ss7
 [Service]
 Type=simple
-ExecStart=/usr/bin/docker run --name smsc --net=host -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 -d restcomm/smscgateway-docker
+ExecStart=/usr/bin/python -m SimpleHTTPServer 3435
 [Install]
 WantedBy=multi-user.target
 EOT
