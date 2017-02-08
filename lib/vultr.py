@@ -118,6 +118,8 @@ class Server:
             data['notify_activate'] = 'no'
         response = v.vultr_post('/server/create', data)
         self.startuptime = Delorean()
+        if 'reached the maximum number of active virtual machines' in response.text:
+            assert False, response.text
         self.subid = response['SUBID']
 
     def getip(self):
