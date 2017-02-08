@@ -1,20 +1,17 @@
 servers:
-  - name: cassandra
+  - name: multiple-vm-cassandra
     boot:
         script: deploy/boot_cassandra.sh
         logs:
         - /tmp/firstboot.log
-        - /tmp/SimpleHTTPServer.log
+        - /tmp/cassandra.log
         ports:
         - 9042
         - 9160
-  - name: smsc
+  - name: multiple-vm-smsc
     boot:
         script: deploy/start_ss7cli.sh
         logs:
         - /tmp/firstboot.log
-        - /tmp/SimpleHTTPServer.log
-        ports:
-        - 3435
         dependencies:
           CASSANDRA_IP: cassandra

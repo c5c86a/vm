@@ -25,7 +25,7 @@ deploy(){
 }
 
 run(){
-  docker run --name db --net=host -p 0.0.0.0:9042:9042 -p 0.0.0.0:9160:9160 -d cassandra:2.0 >> /tmp/SimpleHTTPServer.log 2>&1
+  docker run --name db --net=host -p 0.0.0.0:9042:9042 -p 0.0.0.0:9160:9160 -e "CASSANDRA_LISTEN_ADDRESS=127.0.0.1" -e "MAX_HEAP_SIZE=128M" -e "HEAP_NEWSIZE=24M" -d cassandra:2.0 >> /tmp/cassandra.log 2>&1
 }
 
 ports
