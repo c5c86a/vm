@@ -66,7 +66,7 @@ def main(filename, mock=False):
                                 if ssh.exists(log):
                                     ssh.execute("cat %s" % log)
         finally:
-            eprint("\n\nReady...\n\n")
+            eprint("Ready...")
             if not mock:
                 sleep(560)
             if 'ci' in yml.keys() and yml['ci']:
