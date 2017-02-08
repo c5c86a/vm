@@ -67,7 +67,8 @@ def main(filename, mock=False):
                                     ssh.execute("cat %s" % log)
         finally:
             eprint("\n\nReady...\n\n")
-            sleep(560)
+            if not mock:
+                sleep(560)
             if 'ci' in yml.keys() and yml['ci']:
                 for server in servers_info:   # wait 10 minutes (until travis is about to kill the job) and then fail
                     if 'provisioner' in server.keys():
