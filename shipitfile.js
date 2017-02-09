@@ -1,5 +1,9 @@
 module.exports = function (shipit) {
   shipit.initConfig({
+    default: {
+      deployTo: '/tmp/deploy_to',
+      key: 'key'
+    },
     staging: {
       servers: [
         {
