@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# restcomm/smscgateway-docker needs at least 4GB RAM
 
 set -e
 
