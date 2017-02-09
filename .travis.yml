@@ -22,6 +22,8 @@ before_install:
 - unzip secret.zip
 
 script:
-  - pwd
+  - eval "$(ssh-agent -s)" #start the ssh agent
+  - chmod 600 key
+  - ssh-add key
   - echo -e "Host 104.207.130.164\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - npm run pwd
