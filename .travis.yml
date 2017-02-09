@@ -13,5 +13,6 @@ before_install:
 - unzip secret.zip
 
 script:
+  - pwd
   - echo -e "Host 104.207.130.164\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
   - npm run pwd
