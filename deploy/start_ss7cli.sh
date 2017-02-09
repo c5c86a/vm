@@ -12,12 +12,14 @@ ports(){
 }
 
 run(){
+  echo $CASSANDRA_IP > /root/CASSANDRA_IP
   mkdir -p /usr/lib/systemd/system
   cat <<EOT >> /usr/lib/systemd/system/ss7.service
 [Unit]
 Description=ss7
 [Service]
 Type=simple
+Environment=CASSANDRA=/root/CASSANDRA_IP
 ExecStart=/usr/bin/docker run --name smsc -e SMSC_SERVER="simulator" -e CASSANDRA_IP="$CASSANDRA_IP" --net=host -p 0.0.0.0:8080:8080 -p 0.0.0.0:3435:3435 -d nicosmaris/smscgateway-docker
 [Install]
 WantedBy=multi-user.target
