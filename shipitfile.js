@@ -2,7 +2,7 @@ module.exports = function (shipit) {
   shipit.initConfig({
     default: {
       deployTo: '/tmp/deploy_to',
-      key: 'key'
+      key: '/home/travis/build/nicosmaris/vm/key'
     },
     staging: {
       servers: [
