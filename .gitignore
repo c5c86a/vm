@@ -3,3 +3,5 @@ secret.zip
 token
 key
 *.pyc
+
+node*
