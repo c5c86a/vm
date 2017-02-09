@@ -7,7 +7,7 @@ module.exports = function (shipit) {
     staging: {
       servers: [
         {
-          host: '104.207.130.164',
+          host: '108.61.171.67',
           user: 'root'
         }
       ]

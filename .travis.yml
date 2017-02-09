@@ -25,5 +25,9 @@ script:
   - eval "$(ssh-agent -s)" #start the ssh agent
   - chmod 600 key
   - ssh-add key
-  - echo -e "Host 104.207.130.164\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
+  - echo "Host 108.61.171.67" >> ~/.ssh/config
+  - echo "IdentityFile /home/travis/build/nicosmaris/vm/key" >> ~/.ssh/config
+  - echo "port 22" >> ~/.ssh/config
+  - echo "user root" >> ~/.ssh/config
+  - echo "StrictHostKeyChecking no" >> ~/.ssh/config
   - npm run pwd
