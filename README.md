@@ -39,3 +39,4 @@ The file input.yml should define one or more servers. Each server should have a 
 2. A start script is uploaded after boot port is up and then it is executed. Services if any should start with a tool like systemd
 
 Examples of scripts can be found at the folder deploy. Note that the script install_docker.sh starts before all and installs the docker engine.
+
