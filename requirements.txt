@@ -13,3 +13,5 @@ mock==2.0.0
 pyhamcrest==1.8.5
 # the commit of 27/07/2016 compared to 'behave==1.2.5' supports behave4cmd0.command_steps and scenario.continue_after_failed_step
 -e git+https://github.com/behave/behave.git@e53493c#egg=behave
+
+testinfra
