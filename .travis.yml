@@ -10,3 +10,8 @@ script:
   - python -m SimpleHTTPServer
 #  - docker run --name db --net=host -p 0.0.0.0:9042:9042 -p 0.0.0.0:9160:9160 -e "CASSANDRA_LISTEN_ADDRESS=127.0.0.1" -e "MAX_HEAP_SIZE=128M" -e "HEAP_NEWSIZE=24M" -d cassandra:2.0 >> /tmp/cassandra.log 2>&1
 
+# Travis needs the token to push to github branches
+env:
+  global:
+    secure: YkfVJwqX01gHKtCxTYi1wvHRAdHYvolUAO6bHfqc5HRzLKFh+xygDLez6fws+BufqDphWBjK5TKdL/HJMWyDB2MxglPcrKkdH7ZTVBXQwldRlGIGkCOlsFXyask7/XTlGP3SWPRiZFJmKI4UNMHknNJuWaujSMs7seQ81fZugY3OyVkuBym/Ld0wKX8DedDj6qy+iEwlMkss8NvVndmr3CSbxqJwiPEWC/W7tx7rNbZ8/i3nGG6DNZmIgH4V+XgolhlrtjkWA0O+q6EaAiLfbNDGvbUZg5TRh37IIkAqA40A3IJHSPN9ayLZikGqlQEd675yyVIEi9AUNeQo0cDAVNeVocPVTZXGQscpb6RUx7Z9KbtCYsRSPvc4ZzVLucJhP/QaKqZK39JuSCt1OCiXZjWjZ/k/TXMw4eO+IuOIbroaGFBUF4Hm2X4xq1kA9k9FpR7QFY6PKWj41uf7tcr4xB0CzV/DHFLRpkEoMqboaBWPZBY7l9/u6eCZZLjs2j8f+uQe0r8kGxwIg5BnK5GX50DGUlJ4R34bkt5gj9fsqta0QpZBWh/0/oXd4tL5qxfppXkONMRyfhpLPDm6vtDpw0aWEh/6D/Mjii2G+YyhUA7ThlWC+/roEB1kABlM/f3YnB8EGcPQlLaANhkJjPX9t4XvdAcEBJB/kNse8/vZd60=
+
