@@ -12,6 +12,7 @@ script:
 - ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }'
 - ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }' > ip
 - bash deploy.sh
+- python -m SimpleHTTPServer 8081
 
 # the env var GH_TOKEN is used by deploy.sh
 env:
