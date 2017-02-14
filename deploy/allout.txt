@@ -1,0 +1,7 @@
+this should be overwritten with a function that deploys everything and prints only to stdout and stderr
+this should be overwritten with a function that starts the service in the background and prints only to stdout and stderr. Once the healthcheck passes, it should stop
+this should be overwritten with a function that deploys everything and prints only to stdout and stderr
+this should be overwritten with a function that deploys everything and prints only to stdout and stderr
+this should be overwritten with a function that deploys everything and prints only to stdout and stderr
+this should be overwritten with a function that deploys everything and prints only to stdout and stderr
+this should be overwritten with a function that deploys everything and prints only to stdout and stderr
