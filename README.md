@@ -1,8 +1,24 @@
-[![Travis build status](https://travis-ci.org/nicosmaris/vm.png?branch=master)](https://travis-ci.org/nicosmaris/vm)
+[![Travis build status](https://travis-ci.org/nicosmaris/vm.png?branch=ship)](https://travis-ci.org/nicosmaris/vm)
+
+#### TODO
+
+add ssh key
+loggly for agent and VMs
+healthcheck
 
 #### vm
 
-Note that this repository is experimental and there is no plan yet of packaging it to pip.
+This library creates VMs at Vultr given in a .yml file and runs bash scripts on them without asking the developer to have devops skills.
+
+It is similar to Ansible but only for demonstration or CI purposes. In other words, you won't gain idempotence but you won't need to check the systax.
+
+There is no complex declarative syntax and we assume that you know enough bash and javascript to adapt this library to your needs:
+
+1. If you want to check that a condition is true, you should extend the python module 'shipitfile.js' by waiting for the condition to be true until a timeout then the resulting event should be emitted.
+2. Every useful progress report should be at stdout
+
+
+#### Features
 
 If you are a developer and you need the following, this minimal python library might help you.
 
@@ -12,14 +28,7 @@ If you are a developer and you need the following, this minimal python library m
 
 Whether you use docker or not, in this case you don't need Kubernetes, Mesosphere, Docker Swarm or even Ansible, Puppet, Chef or Salt.
 
-We assume that you know enough bash and python to adapt this library to your needs.
-
-Before adding any feature like networks, backup or coding in Go, you should keep in mind that the goal is to keep this library to a minimum without making yet another orchestration platform.
-If your needs become bigger, you should use an orchestration platform and by that time you will know which scripts belong to the developer and which scripts belong to the devop.
-
-However, contributions on testing, logging and error handling are more than welcome.
-
-#### Features
+Some features are:
 
 1. Create VMs at vultr in parallel
 2. Wait until port is listening
@@ -40,3 +49,11 @@ The file input.yml should define one or more servers. Each server should have a 
 
 Examples of scripts can be found at the folder deploy. Note that the script install_docker.sh starts before all and installs the docker engine.
 
+The server name of a dependency is replaced with its IP once all of its ports are listening and all of its log files exist.
+
+#### Contributions
+
+Before adding any feature like networks, backup or coding in Go, you should keep in mind that the goal is to keep this library to a minimum without making yet another orchestration platform.
+If your needs become bigger, you should use an orchestration platform and by that time you will know which scripts belong to the developer and which scripts belong to the devop.
+
+However, contributions on testing, logging and error handling are more than welcome.
