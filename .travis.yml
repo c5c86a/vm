@@ -9,6 +9,7 @@ before_install:
 script:
   - python -m SimpleHTTPServer 8080 &
   - sleep 1
+  - cat ip
   - curl "http://$(cat ip):8080"
   - ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }'
   - ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }' > ip
