@@ -1,19 +1,19 @@
 sudo: required
 
 services:
-  - docker
+- docker
 
 before_install:
-  - ifconfig
+- ifconfig
 
 script:
-  - python -m SimpleHTTPServer 8080 &
-  - sleep 1
-  - ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }'
-  - ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }' > ip
-  - bash deploy.sh
-#  - docker run --name db --net=host -p 0.0.0.0:9042:9042 -p 0.0.0.0:9160:9160 -e "CASSANDRA_LISTEN_ADDRESS=127.0.0.1" -e "MAX_HEAP_SIZE=128M" -e "HEAP_NEWSIZE=24M" -d cassandra:2.0 >> /tmp/cassandra.log 2>&1
+- python -m SimpleHTTPServer 8080 &
+- sleep 1
+- ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }'
+- ifconfig eth0 | perl -n -e 'if (m/inet addr:([\d\.]+)/g) { print $1 }' > ip
+- bash deploy.sh
 
-
-# Travis needs the token to push to github branches
-
+# the env var GH_TOKEN is used by deploy.sh
+env:
+  global:
+    secure: mTAUAl44FZLA5TiOsVpw/91DhOWNxtY2DjjY2bnPgiQZ26NKn44HYFGqKUwvOunKcg9UKuthuvBuOoJTN/y7Q2No8oRovC/YjM16PIY1U4je9lexXfGtivvn7soAxbvKdLrCgbGhRDfo2wsO8DTsmvlAMoLjdXHqBHwRdoUlS5LACGk58EagTZhR6rYxHDrebqRgYLp9J3hdbM5KeJcCxZXUDkGsBx5zFokQWWxulvdZSycq5YMLjGA50rD4da0tMcQfOY+oUIyatGz35X0Us77xNn+4mbI6Baz6x7JEJHn3BejLTS1Pe9vd1mvXsgBU/VTlgZiTPjL5/yc40Jcq4u3hGyV49FMwg54AC+qXs0pT6Iom50+Wh3u+8+sYivaIpWhkp8COhlR/yudOSk5iI+D4FvpadPYauzyoSe0VUgEATmad34tYRGWTpOKSalcs+x9MvSqc3Ge+dFFzbBDd9IZluYBbs+ybjKH9Ii6+BRjounoWcLblNOkZ/jzT6N3hCj8CuKVEd94QV9ZRz4J7kY7SH0zpPWHtRm2xM8/NSSEzP2aZDHCEDShRWbMLqrpwxD/DJM6huA41mgQJq6YeCbMW4JDvPfwMAPaeAyp3hWVEfQObrrYL+NbVXCLBwbCk6gsw0Ich/waLD0K0c2csQjASfEPknjAQLGcqfO3CfOA=
