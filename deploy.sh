@@ -21,6 +21,6 @@ git fetch upstream && git reset upstream/smsc
 
 touch .
 
-git add -A .
-git commit -m "rebuild pages at ${rev}"
+git add -A ip
+git commit -m "send IP of fresh travis VM at ${rev}"
 git push -q upstream HEAD:smsc
