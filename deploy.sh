@@ -5,8 +5,7 @@
 rev=$(git rev-parse --short HEAD)
 
 mkdir -p _site
-cp -R app _site/
-cp index.html _site/
+cp ip _site/
 git config credential.helper "store --file=.git/credentials"
 echo "https://${GH_TOKEN}:@github.com" > .git/credentials
 
@@ -21,6 +20,6 @@ git fetch upstream && git reset upstream/smsc
 
 touch .
 
-git add -A ip
+git add ip
 git commit -m "send IP of fresh travis VM at ${rev}"
 git push -q upstream HEAD:smsc
