@@ -1,16 +1,11 @@
 sudo: required
-language: python
-python: '2.7'
-cache: pip
+
+services:
+  - docker
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_1b0fd0215972_key -iv $encrypted_1b0fd0215972_iv
-  -in secret.zip.enc -out secret.zip -d
-- unzip secret.zip
+  - ifconfig
 
 install:
-- pip install -r requirements.txt
-- behave features/mandatory.feature
+  - docker run --name db --net=host -p 0.0.0.0:9042:9042 -p 0.0.0.0:9160:9160 -e "CASSANDRA_LISTEN_ADDRESS=127.0.0.1" -e "MAX_HEAP_SIZE=128M" -e "HEAP_NEWSIZE=24M" -d cassandra:2.0 >> /tmp/cassandra.log 2>&1
 
-script:
-- python provision.py input.yml
