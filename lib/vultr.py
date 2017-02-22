@@ -118,7 +118,7 @@ class Key:
         data = {
             'SSHKEYID': self.keyid
         }
-        response = v.vultr_post('/startupscript/destroy', data)
+        response = v.vultr_post('/sshkey/destroy', data)
 
 
 class Server:
