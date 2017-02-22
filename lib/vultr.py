@@ -92,7 +92,7 @@ class Key:
     keyid = None
     def create(self, filename):
         v = VultrAPI('token')
-        ssh_key = None
+        ssh_key = ''
         if filename!=None:
             ssh_key += open(filename).read().strip()
         name = hashlib.md5(ssh_key).digest().encode("base64")
