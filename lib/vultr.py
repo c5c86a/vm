@@ -102,7 +102,7 @@ class Key:
             else:
                 ssh_key = with_email
         name = hashlib.md5(ssh_key).digest().encode("base64")
-        response = v.vultr_get('/sshkey/list', {})
+        response = v.vultr_get('/sshkey/list', {}) # returns HTTP 200 locally but on travis it gets connection refused
         if isinstance(response, list):
             keys = response
         else:
