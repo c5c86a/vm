@@ -94,7 +94,12 @@ class Key:
         v = VultrAPI('token')
         ssh_key = ''
         if filename!=None:
-            ssh_key += open(filename).read().strip()
+            with_email = open(filename).read().strip()
+            words = with_email.split(' ')
+            email = words[-1]
+            if '@' in email:
+                words = ' '.join(words[:-1])
+            ssh_key += words
         name = hashlib.md5(ssh_key).digest().encode("base64")
         response = v.vultr_get('/sshkey/list', {})
         if isinstance(response, list):
@@ -103,7 +108,7 @@ class Key:
             keys = response.values()
         for key in keys:
             if key['ssh_key'] == ssh_key:
-                self.scriptid = key['SSHKEYID']
+                self.keyid = key['SSHKEYID']
                 break
         if self.keyid==None:
             data = {
@@ -140,13 +145,13 @@ class Server:
         self.label = label
         v = VultrAPI('token')
         scriptid = self.script.create(boot)
-        # keyid = self.key.create('key')
+        keyid = self.key.create('key')
         data = {
             'DCID':      datacenter,             # data center at Frankfurt
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
-            'SSHKEYID':  '5794ed3c1ce42', #keyid,
+            'SSHKEYID':  keyid,
             'SCRIPTID':  scriptid       # at digitalocean this is called user_data and the format of the value is cloud-config
         }
         if label.startswith('test'):
@@ -188,7 +193,7 @@ class Server:
                 eprint("3...")
                 self.script.destroy()
                 eprint("4...")
-                # self.key.destroy()
+                self.key.destroy()
                 break
             else:
                 eprint("Waiting 5 minutes for vultr to allow destroying a fresh vm...")
