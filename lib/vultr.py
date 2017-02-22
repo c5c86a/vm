@@ -88,11 +88,45 @@ class Script:
         response = v.vultr_post('/startupscript/destroy', data)
 
 
+class Key:
+    keyid = None
+    def create(self, filename):
+        v = VultrAPI('token')
+        ssh_key = None
+        if filename!=None:
+            ssh_key += open(filename).read().strip()
+        name = hashlib.md5(ssh_key).digest().encode("base64")
+        response = v.vultr_get('/sshkey/list', {})
+        if isinstance(response, list):
+            keys = response
+        else:
+            keys = response.values()
+        for key in keys:
+            if key['ssh_key'] == ssh_key:
+                self.scriptid = key['SSHKEYID']
+                break
+        if self.keyid==None:
+            data = {
+                'name': name,
+                'ssh_key': ssh_key
+            }
+            response = v.vultr_post('/sshkey/create', data)
+            self.keyid = response['SSHKEYID']
+        return self.keyid
+    def destroy(self):
+        v = VultrAPI('token')
+        data = {
+            'SSHKEYID': self.keyid
+        }
+        response = v.vultr_post('/startupscript/destroy', data)
+
+
 class Server:
     subid = None
     ip = None
     startuptime = None
     script = Script()
+    key = Key()
 
     def __init__(self, mock):
         self.mock = mock
@@ -106,12 +140,13 @@ class Server:
         self.label = label
         v = VultrAPI('token')
         scriptid = self.script.create(boot)
+        keyid = self.key.create('key')
         data = {
             'DCID':      datacenter,             # data center at Frankfurt
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
-            'SSHKEYID':  '5794ed3c1ce42',
+            'SSHKEYID':  keyid,
             'SCRIPTID':  scriptid       # at digitalocean this is called user_data and the format of the value is cloud-config
         }
         if label.startswith('test'):
@@ -153,6 +188,7 @@ class Server:
                 eprint("3...")
                 self.script.destroy()
                 eprint("4...")
+                self.key.destroy()
                 break
             else:
                 eprint("Waiting 5 minutes for vultr to allow destroying a fresh vm...")
