@@ -98,8 +98,9 @@ class Key:
             words = with_email.split(' ')
             email = words[-1]
             if '@' in email:
-                words = ' '.join(words[:-1])
-            ssh_key += words
+                ssh_key = ' '.join(words[:-1])
+            else:
+                ssh_key = with_email
         name = hashlib.md5(ssh_key).digest().encode("base64")
         response = v.vultr_get('/sshkey/list', {})
         if isinstance(response, list):
