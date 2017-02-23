@@ -20,6 +20,7 @@ def mock_vultr():
     mock_sync('https://api.vultr.com/v1/server/destroy')
     mock_sync('https://api.vultr.com/v1/sshkey/list', responses.GET)
     mock_sync('https://api.vultr.com/v1/sshkey/create', body='{"SSHKEYID":1}')
+    mock_sync('https://api.vultr.com/v1/sshkey/destroy')
 
 def before_all(context):
     context.patches = []
