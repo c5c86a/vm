@@ -29,6 +29,7 @@ class VultrAPI():
         self.url = 'https://api.vultr.com/v1'
 
     def vultr_post(self, endpoint, data):
+        print(endpoint)
         result = None
         sleep(3) # the rate limit is 2 calls per second
         headers = {'api_key': open(self.filename).read().strip()}
@@ -42,6 +43,7 @@ class VultrAPI():
         return result
 
     def vultr_get(self, endpoint, data):
+        print(endpoint)
         result = None
         sleep(3) # the rate limit is 2 calls per second
         data['api_key'] = open(self.filename).read().strip()
