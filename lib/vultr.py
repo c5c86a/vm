@@ -156,8 +156,8 @@ class Server:
         """
         self.label = label
         v = VultrAPI('token')
-        scriptid = self.script.create(boot)
         keyid = self.key.create('key')
+        scriptid = self.script.create(boot)
         data = {
             'DCID':      datacenter,             # data center at Frankfurt
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
