@@ -45,7 +45,12 @@ class VultrAPI():
         result = None
         sleep(3) # the rate limit is 2 calls per second
         data['api_key'] = open(self.filename).read().strip()
-        response = get(self.url + endpoint, params=data)
+        try:
+            response = get(self.url + endpoint, params=data)
+        except:
+            print("11111111111111")
+            print(data)
+            print("22222222222222")
         try:
             json_object = response.json()
         except:
