@@ -129,8 +129,11 @@ class Key:
                 'ssh_key': ssh_key
             }
             response = v.vultr_post('/sshkey/create', data)
-            assert isinstance(response, dict) and 'SSHKEYID' in response.keys(), response
-            self.keyid = response['SSHKEYID']
+            if isinstance(response, list):
+                keys = response
+            else:
+                keys = response.values()
+            self.keyid = keys['SSHKEYID']
         return self.keyid
     def destroy(self):
         v = VultrAPI('token')
