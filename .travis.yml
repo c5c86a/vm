@@ -9,7 +9,7 @@ before_install:
 - unzip secret.zip
 
 install:
-- curl --header "API-key: $(cat token)" https://api.vultr.com/v1/sshkey/list
+- bash new.sh
 #- curl -X GET "https://api.vultr.com/v1/sshkey/list?api_key=$(cat token)"
 #- pip install -r requirements.txt
 #- behave features/mandatory.feature
