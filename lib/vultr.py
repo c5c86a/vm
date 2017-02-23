@@ -32,7 +32,7 @@ class VultrAPI():
         print(now())
         print(endpoint)
         result = None
-        sleep(3) # the rate limit is 2 calls per second
+        sleep(1) # the rate limit is 2 calls per second
         headers = {'api_key': open(self.filename).read().strip()}
         response = post(self.url+endpoint, params=headers, data=data, timeout=60)
         try:
@@ -47,7 +47,7 @@ class VultrAPI():
         print(now())
         print(endpoint)
         result = None
-        sleep(3) # the rate limit is 2 calls per second
+        sleep(1) # the rate limit is 2 calls per second
         data['api_key'] = open(self.filename).read().strip()
         try:
             response = get(self.url + endpoint, params=data)
