@@ -55,6 +55,7 @@ class VultrAPI():
             print("11111111111111")
             print(data)
             print("22222222222222")
+            raise
         try:
             json_object = response.json()
         except:
