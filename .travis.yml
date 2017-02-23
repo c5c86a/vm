@@ -9,11 +9,11 @@ before_install:
 - unzip secret.zip
 
 install:
-- bash new.sh
+- echo "..."
 #- curl -X GET "https://api.vultr.com/v1/sshkey/list?api_key=$(cat token)"
 #- pip install -r requirements.txt
 #- behave features/mandatory.feature
 
 script:
-- echo "..."
 #- python provision.py input.yml
+- bash new.sh
