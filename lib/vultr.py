@@ -130,7 +130,7 @@ class Key:
             }
             response = v.vultr_post('/sshkey/create', data)
             if isinstance(response, list):
-                keys = response
+                keys = response[0]
             else:
                 keys = response.values()
             self.keyid = keys['SSHKEYID']
