@@ -103,7 +103,7 @@ class Key:
             with_email = open(filename).read().strip()
             words = with_email.split(' ')
             email = words[-1]
-            if '@' in email:
+            if '@@@@' in email:
                 ssh_key = ' '.join(words[:-1])
             else:
                 ssh_key = with_email
