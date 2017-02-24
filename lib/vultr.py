@@ -123,7 +123,10 @@ class Key:
                 'ssh_key': ssh_key
             }
             response = v.vultr_post('/sshkey/create', data)
-            self.keyid = response['SSHKEYID']
+            try:
+                self.keyid = response['SSHKEYID']
+            except:
+                assert False, response.text
         return self.keyid
     def destroy(self):
         v = VultrAPI('token')
