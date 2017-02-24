@@ -14,6 +14,6 @@ install:
 - behave features/mandatory.feature
 
 script:
-- travis_retry python provision.py input.yml
+- python provision.py input.yml
 #- bash new.sh
 #- python new.py
