@@ -119,7 +119,7 @@ class Key:
                 break
         if self.keyid==None:
             data = {
-                'name': name,   # this is a minor security issue compared to the stdout in case of 404, so we first need private logging
+                'name': 'from-agent-to-vm',   # this is a minor security issue compared to the stdout in case of 404, so we first need private logging
                 'ssh_key': ssh_key
             }
             response = v.vultr_post('/sshkey/create', data)
