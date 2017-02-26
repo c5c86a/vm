@@ -4,16 +4,20 @@ set -e
 
 echo "install docker"
 
-export TOKEN="logglytoken"
-export PASSWORD="logglypassword"
+echo logglytoken > /root/loggly_token
+echo logglypassword > /root/loggly_password
 
 export DEBIAN_FRONTEND=noninteractive
 
 send2loggly(){
-  curl -O https://www.loggly.com/install/configure-linux.sh
-  sudo bash configure-linux.sh -a nicosmaris -t $TOKEN -u nicos -p $PASSWORD
-  sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
-  exec 1> >(logger -s -t $(basename $0)) 2>&1
+  if [ -f /root/loggly_token ]; then
+    if [ ! -f configure-linux.sh ]; then
+        curl -O https://www.loggly.com/install/configure-linux.sh
+    fi
+    sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat loggly_password)
+    sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
+    exec 1> >(logger -s -t $(basename $0)) 2>&1
+  fi
 }
 fix_vultr(){
   # vultr starts ubuntu with dpkg locked and without python installed
@@ -77,8 +81,6 @@ install_docker(){
 }
 
 fix_vultr
-if [ "$TOKEN" != "logglytoken" ]; then
-  send2loggly
-fi
+send2loggly
 install_docker
 
