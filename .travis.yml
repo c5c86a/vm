@@ -4,18 +4,11 @@ python: '2.7'
 cache: pip
 
 before_install:
-- openssl aes-256-cbc -K $encrypted_1b0fd0215972_key -iv $encrypted_1b0fd0215972_iv
-  -in secret.zip.enc -out secret.zip -d
 - unzip secret.zip
 
 install:
-- bash new.sh
-#- curl -X GET "https://api.vultr.com/v1/sshkey/list?api_key=$(cat token)"
-#- pip install -r requirements.txt
-#- behave features/mandatory.feature
+- pip install -r requirements.txt
+- behave features/mandatory.feature
 
 script:
-- echo "done"
-#- python provision.py input.yml
-#- bash new.sh
-#- python new.py
+- python provision.py input.yml
