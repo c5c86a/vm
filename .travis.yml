@@ -13,6 +13,7 @@ script:
 - exec 1> >(logger -s -t $(basename $0)) 2>&1
 - sed -i "s/logglytoken/$(cat loggly_token)/" deploy/install_docker.sh
 - sed -i "s/logglypassword/$(cat loggly_password)/" deploy/install_docker.sh
+- cat deploy/install_docker.sh
 - pip install -r requirements.txt
 - behave features/mandatory.feature
 - python provision.py input.yml
