@@ -2,6 +2,8 @@
 
 set -e
 
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+
 ports(){
   ufw default deny incoming
   ufw default allow outgoing
