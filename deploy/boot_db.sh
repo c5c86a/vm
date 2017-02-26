@@ -2,6 +2,8 @@
 
 set -e
 
+exec 1> >(logger -s -t $(basename $0)) 2>&1
+
 echo "boot db"
 
 export DEBIAN_FRONTEND=noninteractive
