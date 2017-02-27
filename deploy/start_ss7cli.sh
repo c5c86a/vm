@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 send2loggly(){
   if [ -f /root/loggly_token ]; then
     if [ ! -f configure-linux.sh ]; then
@@ -41,6 +39,7 @@ EOT
 }
 
 send2loggly
+set -e
 
 echo "curl -X GET http://$CASSANDRA_IP:9042"
 

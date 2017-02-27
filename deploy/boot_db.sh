@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 echo "boot db"
 
 export DEBIAN_FRONTEND=noninteractive
@@ -38,6 +36,7 @@ run(){
 }
 
 send2loggly
+set -e
 ports
 deploy
 run

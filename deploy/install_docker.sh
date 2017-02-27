@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 echo "install docker"
 
 echo logglytoken > /root/loggly_token
@@ -82,5 +80,6 @@ install_docker(){
 
 fix_vultr
 send2loggly
+set -e
 install_docker
 
