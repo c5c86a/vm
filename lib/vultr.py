@@ -154,14 +154,14 @@ class Server:
         """
         self.label = label
         v = VultrAPI('token')
-        #keyid = self.key.create('key')
+        keyid = self.key.create('key')
         scriptid = self.script.create(boot)
         data = {
             'DCID':      datacenter,             # data center at Frankfurt
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
-            'SSHKEYID':  '58b347ad4455c',   # workaround until support/view_ticket/?TICKETID=TCQ-72CMP
+            'SSHKEYID':  keyid,   # workaround until support/view_ticket/?TICKETID=TCQ-72CMP
             'SCRIPTID':  scriptid       # at digitalocean this is called user_data and the format of the value is cloud-config
         }
         if label.startswith('test'):
@@ -203,7 +203,7 @@ class Server:
                 eprint("3...")
                 self.script.destroy()
                 eprint("4...")
-                #self.key.destroy()
+                self.key.destroy()
                 break
             else:
                 eprint("Waiting 5 minutes for vultr to allow destroying a fresh vm...")
