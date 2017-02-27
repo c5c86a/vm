@@ -12,7 +12,7 @@ send2loggly(){
     if [ ! -f configure-linux.sh ]; then
         curl -O https://www.loggly.com/install/configure-linux.sh
     fi
-    sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat loggly_password)
+    sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
     sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
     exec 1> >(logger -s -t $(basename $0)) 2>&1
   fi
