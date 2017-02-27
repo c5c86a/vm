@@ -14,11 +14,11 @@ send2loggly(){
     fi
     sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
     sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
-    exec 1> >(logger -s -t $(basename $0)) 2>&1
   fi
 }
+
 fix_vultr(){
-  # vultr starts ubuntu with dpkg locked and without python installed
+  # vultr starts ubuntu with dpkg locked (/var/log/unattended-upgrades/*) and without python installed
   killall -we 'apt-get'
   echo "start searching for 'apt-get -qq -y update' initiated by vultr..."
   ps aux | grep '[a]pt'
@@ -30,7 +30,8 @@ fix_vultr(){
 #  apt-get update
 }
 
-install_docker(){
+cat <<EOT >> /root/docker.sh
+  exec 1> >(logger -s -t $(basename $0)) 2>&1
   # uncomment due to docker/issues/23365#issuecomment-224638271
   sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
   sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
@@ -76,10 +77,9 @@ install_docker(){
 
   docker run -d hello-world
   docker ps -a
-}
+EOT
 
 fix_vultr
 send2loggly
-set -e
-install_docker
+bash /root/docker.sh
 
