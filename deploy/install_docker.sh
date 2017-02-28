@@ -31,7 +31,7 @@ fix_vultr(){
 }
 
 cat <<EOT >> /root/docker.sh
-  exec 1> >(logger -s -t $(basename $0)) 2>&1
+  exec > >(logger -p installdocker.info) 2> >(logger -p installdocker.warn)
   # uncomment due to docker/issues/23365#issuecomment-224638271
   sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
   sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs

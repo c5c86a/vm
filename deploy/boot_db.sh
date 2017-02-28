@@ -11,7 +11,7 @@ send2loggly(){
     fi
     sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
     sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
-    exec 1> >(logger -s -t $(basename $0)) 2>&1
+    exec > >(logger -p boot.info) 2> >(logger -p boot.warn)
   fi
 }
 ports(){
