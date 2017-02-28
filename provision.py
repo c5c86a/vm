@@ -2,7 +2,7 @@ from __future__ import print_function
 
 import sys
 from os.path import basename
-
+import os
 import yaml
 
 import lib
@@ -25,8 +25,11 @@ class Provisioner:
         data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
+        hostname = label
+        if 'TRAVIS_COMMIT' in os.environ.keys():
+            hostname += '-' + os.environ['TRAVIS_COMMIT']
         self.srv = lib.vultr.Server(mock)
-        self.srv.create(label, plan, datacenter, boot)
+        self.srv.create(label, plan, datacenter, boot, hostname)
 
     def destroy(self):
         self.srv.destroy()

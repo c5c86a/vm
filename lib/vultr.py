@@ -146,7 +146,7 @@ class Server:
     def __init__(self, mock):
         self.mock = mock
 
-    def create(self, label, plan, datacenter, boot):
+    def create(self, label, plan, datacenter, boot, hostname):
         """
         Creates a new vm at vultr. Usually it takes 2 minutes.
         :param label:
@@ -161,6 +161,7 @@ class Server:
             'VPSPLANID': plan,       # 768 MB RAM,15 GB SSD,1.00 TB BW
             'OSID':      215,           # virtualbox running ubuntu 16.04 x64
             'label':     label,        #
+            'hostname':  hostname,
             'SSHKEYID':  keyid,   # workaround until support/view_ticket/?TICKETID=TCQ-72CMP
             'SCRIPTID':  scriptid       # at digitalocean this is called user_data and the format of the value is cloud-config
         }
