@@ -19,9 +19,12 @@ class Provisioner:
     label = None
     ip = None
 
-    def __init__(self, mock, label, plan=29, datacenter=9, boot=None):
+    def __init__(self, mock, label, plan=200, datacenter=9, boot=None):
         """
-        plan 29 is 768 MB RAM,15 GB SSD,1.00 TB BW and can be found at https://api.vultr.com/v1/plans/list 90 is 3GB at dc 1
+        plan 200 is the promotional one with 512 MB RAM, 20 GM SSD, 0.50 TB BW
+        and is not at https://api.vultr.com/v1/plans/list
+        201 is "1024 MB RAM,25 GB SSD,1.00 TB BW"
+        deprecated plans are available for 30 days after they are deprecated.
         data center 9 is at Frankfurt and each datacenter has specific plans. Data centers list is at https://api.vultr.com/v1/regions/list
         """
         self.label = label
