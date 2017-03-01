@@ -30,7 +30,7 @@ class Provisioner:
         self.label = label
         hostname = label
         if 'TRAVIS_COMMIT' in os.environ.keys():
-            hostname += '-' + os.environ['TRAVIS_COMMIT']
+            hostname += '-' + os.environ['TRAVIS_COMMIT'][:7]
         self.srv = lib.vultr.Server(mock)
         self.srv.create(label, plan, datacenter, boot, hostname)
 
