@@ -6,12 +6,37 @@ export DEBIAN_FRONTEND=noninteractive
 
 send2loggly(){
   if [ -f /root/loggly_token ]; then
+    cat <<EOT >> /etc/rsyslog.d/21-prepare.conf
+$template msg,"<%PRI%>%timegenerated% %HOSTNAME% %syslogtag% %msg%"
+
+# File access
+$InputFileName /tmp/firstboot.log
+$InputFileTag prepare.firstboot:
+$InputFileStateFile stat-firstboot-Monitor
+$InputFileSeverity info
+$InputFileFacility local7
+$InputFilePollInterval 1
+$InputFilePersistStateInterval 1
+$InputRunFileMonitor
+# File access
+$InputFileName /root/startapp.log
+$InputFileTag prepare.startapp:
+$InputFileStateFile stat-startapp-Monitor
+$InputFileSeverity info
+$InputFileFacility local7
+$InputFilePollInterval 1
+$InputFilePersistStateInterval 1
+$InputRunFileMonitor
+
+if $syslogtag contains 'prepare.' and $syslogfacility-text == 'local7' then @@LOGTRUST-RELAY:PORT;msg
+:syslogtag, contains, "prepare." ~
+EOT
+    sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
+    /etc/init.d/rsyslog restart
     if [ ! -f configure-linux.sh ]; then
         curl -O https://www.loggly.com/install/configure-linux.sh
     fi
     sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
-    sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
-#    exec > >(logger -p boot.info) 2> >(logger -p boot.warn)
   fi
 }
 ports(){
@@ -37,6 +62,7 @@ run(){
 
 send2loggly
 set -e
+set -x
 ports
 deploy
 run

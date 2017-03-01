@@ -1,16 +1,5 @@
 #!/bin/bash
 
-send2loggly(){
-  if [ -f /root/loggly_token ]; then
-    if [ ! -f configure-linux.sh ]; then
-        curl -O https://www.loggly.com/install/configure-linux.sh
-    fi
-    sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
-    sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
-#    exec > >(logger -p start.info) 2> >(logger -p start.warn)
-  fi
-}
-
 ports(){
   ufw default deny incoming
   ufw default allow outgoing
@@ -38,8 +27,9 @@ EOT
   systemctl status ss7
 }
 
-send2loggly
+exec > /root/startapp.log 2>&1
 set -e
+set -x
 
 echo "curl -X GET http://$CASSANDRA_IP:9042"
 
