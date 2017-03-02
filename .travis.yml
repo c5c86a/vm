@@ -9,6 +9,7 @@ install:
 
 script:
 - sudo cp deploy/21-prepare.conf /etc/rsyslog.d/
+- sudo sed -i '/KLogPermitNonKernelFacility/#KLogPermitNonKernelFacility' /etc/rsyslog.conf
 - sed -i '/\$PrivDropToUser syslog/\$PrivDropToUser adm' /etc/rsyslog.conf
 - sudo /etc/init.d/rsyslog restart
 - sudo rsyslogd -version

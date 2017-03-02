@@ -10,6 +10,7 @@ export DEBIAN_FRONTEND=noninteractive
 send2loggly(){
   if [ -f /root/loggly_token ]; then
     cat <<EOT >> /etc/rsyslog.d/21-prepare.conf
+\$ModLoad imfile
 \$template msg,"<%PRI%>%timegenerated% %HOSTNAME% %syslogtag% %msg%"
 
 # File access
@@ -45,6 +46,7 @@ if \$syslogtag contains 'prepare.' and \$syslogfacility-text == 'local7' then @@
 EOT
     sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
     sudo systemctl restart systemd-journald
+    sudo sed -i '/KLogPermitNonKernelFacility/#KLogPermitNonKernelFacility' /etc/rsyslog.conf
     sudo sed -i '/\$PrivDropToUser syslog/\$PrivDropToUser adm' /etc/rsyslog.conf
     /etc/init.d/rsyslog restart
     if [ ! -f configure-linux.sh ]; then
