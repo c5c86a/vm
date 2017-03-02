@@ -50,12 +50,13 @@ EOT
     sudo sed -i '/\$PrivDropToUser syslog/\$PrivDropToUser adm' /etc/rsyslog.conf
     sudo sed -i '/xconsole/console' /etc/rsyslog.d/50-default.conf
     service rsyslog restart
+    rsyslogd -version
+    rsyslogd -N1
+
     if [ ! -f configure-linux.sh ]; then
         curl -O https://www.loggly.com/install/configure-linux.sh
     fi
     sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
-    rsyslogd -version
-    rsyslogd -N1
   fi
 }
 
@@ -121,5 +122,5 @@ install_docker(){
 }
 
 fix_vultr
-send2loggly
 install_docker
+send2loggly

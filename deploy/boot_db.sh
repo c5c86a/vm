@@ -33,3 +33,6 @@ ports
 deploy
 run
 
+sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
+
+
