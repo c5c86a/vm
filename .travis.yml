@@ -18,4 +18,8 @@ script:
 
 - pip install -r requirements.txt
 - behave features/mandatory.feature
+
+- sed -i "s/logglytoken/$(cat loggly_token)/" deploy/install_docker.sh
+- sed -i "s/logglypassword/$(cat loggly_password)/" deploy/install_docker.sh
 - python provision.py input.yml
+
