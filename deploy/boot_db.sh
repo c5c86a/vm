@@ -1,4 +1,3 @@
-#!/bin/bash
 
 ports(){
   ufw default deny incoming
