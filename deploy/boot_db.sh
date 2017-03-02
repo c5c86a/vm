@@ -33,6 +33,9 @@ ports
 deploy
 run
 
+if [ ! -f configure-linux.sh ]; then
+    curl -O https://www.loggly.com/install/configure-linux.sh
+fi
 sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
 
 

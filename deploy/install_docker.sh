@@ -7,7 +7,7 @@ echo logglypassword > /root/loggly_password
 
 export DEBIAN_FRONTEND=noninteractive
 
-send2loggly(){
+sendtologgly(){
   if [ -f /root/loggly_token ]; then
     cat <<EOT >> /etc/rsyslog.d/21-prepare.conf
 \$ModLoad imfile
@@ -52,11 +52,6 @@ EOT
     service rsyslog restart
     rsyslogd -version
     rsyslogd -N1
-
-    if [ ! -f configure-linux.sh ]; then
-        curl -O https://www.loggly.com/install/configure-linux.sh
-    fi
-    sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
   fi
 }
 
@@ -123,4 +118,4 @@ install_docker(){
 
 fix_vultr
 install_docker
-send2loggly
+sendtologgly
