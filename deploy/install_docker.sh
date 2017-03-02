@@ -118,4 +118,4 @@ install_docker(){
 
 fix_vultr
 install_docker
-sendtologgly
+#sendtologgly

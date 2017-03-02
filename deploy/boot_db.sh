@@ -18,7 +18,7 @@ deploy(){
 }
 
 run(){
-  python -m SimpleHTTPServer 9042 >> /tmp/SimpleHTTPServer.log 2>&1
+  python -m SimpleHTTPServer 9042 >> /tmp/SimpleHTTPServer.log 2>&1 &
 }
 
 set -e
@@ -33,9 +33,7 @@ ports
 deploy
 run
 
-if [ ! -f configure-linux.sh ]; then
-    curl -O https://www.loggly.com/install/configure-linux.sh
-fi
-sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
+curl -O https://www.loggly.com/install/configure-file-monitoring.sh
+bash configure-file-monitoring.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password) -f /tmp -l `hostname`
 
 
