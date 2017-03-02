@@ -9,11 +9,51 @@ export DEBIAN_FRONTEND=noninteractive
 
 send2loggly(){
   if [ -f /root/loggly_token ]; then
+    cat <<EOT >> /etc/rsyslog.d/21-prepare.conf
+\$template msg,"<%PRI%>%timegenerated% %HOSTNAME% %syslogtag% %msg%"
+
+# File access
+\$InputFileName /tmp/firstboot.log
+\$InputFileTag prepare.firstboot:
+\$InputFileStateFile stat-firstboot-Monitor
+\$InputFileSeverity info
+\$InputFileFacility local7
+\$InputFilePollInterval 1
+\$InputFilePersistStateInterval 1
+\$InputRunFileMonitor
+# File access
+\$InputFileName /root/startapp.log
+\$InputFileTag prepare.startapp:
+\$InputFileStateFile stat-startapp-Monitor
+\$InputFileSeverity info
+\$InputFileFacility local7
+\$InputFilePollInterval 1
+\$InputFilePersistStateInterval 1
+\$InputRunFileMonitor
+# File access
+\$InputFileName /tmp/travis.log
+\$InputFileTag prepare.travis:
+\$InputFileStateFile stat-travis-Monitor
+\$InputFileSeverity info
+\$InputFileFacility local7
+\$InputFilePollInterval 1
+\$InputFilePersistStateInterval 1
+\$InputRunFileMonitor
+
+if \$syslogtag contains 'prepare.' and \$syslogfacility-text == 'local7' then @@LOGTRUST-RELAY:PORT;msg
+:syslogtag, contains, "prepare." ~
+EOT
+    sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
+    sudo systemctl restart systemd-journald
+    sudo sed -i '/\$PrivDropToUser syslog/\$PrivDropToUser adm' /etc/rsyslog.conf
+    /etc/init.d/rsyslog restart
     if [ ! -f configure-linux.sh ]; then
         curl -O https://www.loggly.com/install/configure-linux.sh
     fi
     sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
-    sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
+    exec > /tmp/startapp.log 2>&1
+    rsyslogd -version
+    rsyslogd -N1
   fi
 }
 
@@ -30,8 +70,7 @@ fix_vultr(){
 #  apt-get update
 }
 
-cat <<EOT >> /root/docker.sh
-  exec > >(logger -p installdocker.info) 2> >(logger -p installdocker.warn)
+install_docker(){
   # uncomment due to docker/issues/23365#issuecomment-224638271
   sed -i '/^#SYS_GID_MIN/s/^#//g' /etc/login.defs
   sed -i '/^#SYS_GID_MAX/s/^#//g' /etc/login.defs
@@ -77,9 +116,8 @@ cat <<EOT >> /root/docker.sh
 
   docker run -d hello-world
   docker ps -a
-EOT
+}
 
 fix_vultr
 send2loggly
-bash /root/docker.sh
-
+install_docker
