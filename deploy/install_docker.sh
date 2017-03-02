@@ -48,12 +48,12 @@ EOT
     sudo systemctl restart systemd-journald
     sudo sed -i '/KLogPermitNonKernelFacility/\#KLogPermitNonKernelFacility' /etc/rsyslog.conf
     sudo sed -i '/\$PrivDropToUser syslog/\$PrivDropToUser adm' /etc/rsyslog.conf
+    sudo sed -i '/xconsole/console' /etc/rsyslog.d/50-default.conf
     service rsyslog restart
     if [ ! -f configure-linux.sh ]; then
         curl -O https://www.loggly.com/install/configure-linux.sh
     fi
     sudo bash configure-linux.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password)
-    exec > /tmp/startapp.log 2>&1
     rsyslogd -version
     rsyslogd -N1
   fi
