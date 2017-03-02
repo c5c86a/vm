@@ -46,9 +46,9 @@ if \$syslogtag contains 'prepare.' and \$syslogfacility-text == 'local7' then @@
 EOT
     sudo sed -i '/ForwardToSyslog/c\ForwardToSyslog=Yes' /etc/systemd/journald.conf
     sudo systemctl restart systemd-journald
-    sudo sed -i '/KLogPermitNonKernelFacility/#KLogPermitNonKernelFacility' /etc/rsyslog.conf
+    sudo sed -i '/KLogPermitNonKernelFacility/\#KLogPermitNonKernelFacility' /etc/rsyslog.conf
     sudo sed -i '/\$PrivDropToUser syslog/\$PrivDropToUser adm' /etc/rsyslog.conf
-    /etc/init.d/rsyslog restart
+    service rsyslog restart
     if [ ! -f configure-linux.sh ]; then
         curl -O https://www.loggly.com/install/configure-linux.sh
     fi
