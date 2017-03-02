@@ -33,6 +33,6 @@ deploy
 run
 
 curl -O https://www.loggly.com/install/configure-file-monitoring.sh
-bash configure-file-monitoring.sh -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password) -f /tmp -l `hostname`
+bash configure-file-monitoring.sh -s -a nicosmaris -t $(cat /root/loggly_token) -u nicos -p $(cat /root/loggly_password) -f /tmp -l `hostname`
 
 
