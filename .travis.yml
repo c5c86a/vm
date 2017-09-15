@@ -9,3 +9,6 @@ install:
 
 script:
 - echo 'TODO'
+
+cache:
+  apt: true
