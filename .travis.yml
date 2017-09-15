@@ -2,25 +2,6 @@ language: python
 python: '2.7'
 
 dist: trusty
-sudo: false
-cache:
-  apt: true
-  directories:
-  - $HOME/.cache/pip
-addons:
-  apt:
-    sources:
-    - sourceline: 'deb http://repo.saltstack.com/apt/ubuntu/14.04/amd64/archive/2017.7.1 trusty main'
-      key_url: 'https://repo.saltstack.com/apt/ubuntu/14.04/amd64/archive/2017.7.1/SALTSTACK-GPG-KEY.pub'
-    packages:
-    - salt-cloud
-    - salt-common
-    - dctrl-tools
-    - python-mako
-    - python-msgpack
-    - python-psutil
-    - python-systemd
-    - python-zmq
-    - salt-master
-    - salt-minion
 
+script:
+- bash provisioner.sh
