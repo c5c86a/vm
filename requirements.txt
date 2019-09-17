@@ -2,7 +2,7 @@
 fabric==1.13.1
 delorean==0.6.0
 requests[security]==2.3.0
-PyYAML==3.10
+PyYAML==5.1
 
 # the following dependencies are only for testing
 
